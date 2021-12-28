@@ -1,2 +1,2 @@
-# ChangedLaterSvelte
+# ChangeLaterSvelte
 Svelte Time Traveling Debugger
