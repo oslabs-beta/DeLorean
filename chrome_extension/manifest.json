@@ -1,0 +1,19 @@
+{
+  "name": "Getting Started Example",
+  "description": "Build an Extension!",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage", "activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "/SvelteDeLorean.png"
+    }
+  },
+  "icons": {
+    "128": "/SvelteDeLorean.png"
+  }
+}
