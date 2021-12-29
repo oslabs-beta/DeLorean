@@ -1,19 +1,19 @@
 {
-  "name": "Getting Started Example",
+  "name": "DeLorean",
   "description": "Build an Extension!",
   "version": "1.0",
   "manifest_version": 3,
+  "devtools_page": "./devtools.html",
   "background": {
     "service_worker": "background.js"
   },
   "permissions": ["storage", "activeTab", "scripting"],
   "action": {
-    "default_popup": "popup.html",
     "default_icon": {
-      "128": "/SvelteDeLorean.png"
+      "128": "./SvelteDeLorean.png"
     }
   },
   "icons": {
-    "128": "/SvelteDeLorean.png"
+    "128": "./SvelteDeLorean.png"
   }
 }
