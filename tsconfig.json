@@ -2,11 +2,33 @@
   "compilerOptions": {
     "outDir": "./dist/",
     "noImplicitAny": true,
-    "module": "es6",
-    "target": "es5",
+    "importsNotUsedAsValues": "remove",
+    "module": "esNext",
+    "target": "es6",
     "allowJs": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "sourceMap": true
-  }
+    "sourceMap": true,
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "paths": {
+			"client/*": ["client/*"]
+		},
+    "types": [
+			"svelte",
+			"svelte/store",
+			"svelte/motion",
+			"svelte/transition",
+			"svelte/animate",
+			"svelte/easing"
+		]
+  },
+  "include": ["client/*"],
+  "exclude": ["./node_modules/*"],
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "ts-node": {
+		"compilerOptions": {
+			"module": "commonjs"
+		}
+	}
 }
