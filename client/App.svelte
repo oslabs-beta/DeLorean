@@ -1,25 +1,38 @@
 <script lang="ts">
-  let mph: string = "30";
+  let mph: number = 30;
   let excitement :string = '';
   
-  $: speedBanner = mph.repeat(Number(mph));
+  $: speedBanner = `${mph} `.repeat(mph);
 
   function timeTravel() :void {
-    const mphNum: number = Number(mph)
-    if (mphNum * 1.1 < 88) mph = Math.floor(mphNum * 1.1).toString();
+    if (mph * 1.1 < 88) mph = Math.floor(mph * 1.1);
     else {
-      (mph = "88");
+      mph = 88
       excitement += '!';
     }
   }
 </script>
 <div class="container">
-  <h1> Approaching {mph} miles per hour{excitement}</h1>
+  <h1> {mph < 88 ? "Cruising at" : "Approaching"} {mph} miles per hour{excitement}</h1>
   <button on:click={timeTravel}>Time travel!</button>
   <p class="banner">{speedBanner}</p>
 </div>
 
 <style>
+  h1 {
+    color: orangered;
+    text-align: center;
+  }
+  button {
+    padding: 2em 4em;
+    font-family: inherit;
+    text-transform: uppercase;
+    border-radius: 4px;
+    border: none;
+    background-color: wheat;
+    color: brown;
+    font-style: italic;
+  }
   .container {
     display: flex;
     flex-direction: column;
@@ -28,11 +41,10 @@
     background-color: blanchedalmond;
     box-shadow: rgb(156, 145, 127) 5px 5px 5px;
   }
-  h1 {
-    color: orangered;
-  }
   .banner {
     color: navy;
     margin: 5em;
+    max-width: fit-content;
+    text-align: center;
   }
 </style>
