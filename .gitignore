@@ -1,4 +1,4 @@
 build/*.js
 .DS_Store
-node_modules
-public/build
+node_modules/*
+public/build/*

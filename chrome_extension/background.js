@@ -1,12 +1,9 @@
-let color = '#3aa757';
+// This is a service worker. Its console logs will appear in a service worker console
+console.log('console log from global in background.js')
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({ color });
-  console.log('Default background color set to %cgreen', `color: ${color}`);
-  // const body = document.getElementsByName('body');
-  // body.color = red; 
-  // document.body.style.backgroundColor="orange"
-  
-});
-
-
+chrome.runtime.onMessage.addListener((request, sender) => {
+  console.log(sender.tab ? "from a content script: " + sender.tab.url : "from the extension");
+  if (request.greeting === "hello") {
+    console.log('received hello from content script')
+  }
+})

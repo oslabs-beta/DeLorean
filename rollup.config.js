@@ -32,6 +32,7 @@ function serve() {
 
 export default {
 	input: 'client/main.ts',
+	external: 'chrome',
 	output: {
 		sourcemap: true,
 		format: 'iife',

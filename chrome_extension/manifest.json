@@ -7,7 +7,14 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["storage", "activeTab", "scripting", "debugger"],
+  "content_scripts": [
+    {
+      "matches": ["*://localhost:*/*"],
+      "all_frames": true,
+      "js": ["contentScript.js"]
+    }
+  ],
+  "permissions": ["storage", "activeTab", "scripting"],
   "action": {
     "default_icon": {
       "128": "./SvelteDeLorean.png"
