@@ -1,6 +1,6 @@
 {
   "name": "DeLorean",
-  "description": "Build an Extension!",
+  "description": "Time-travel debugger for Svelete applications",
   "version": "1.0",
   "manifest_version": 3,
   "devtools_page": "./devtools.html",
