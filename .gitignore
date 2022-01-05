@@ -1,4 +1,6 @@
 build/*.js
 .DS_Store
 node_modules/*
-public/build/*
+public/build/*.js
+public/build/*.js.map
+public/build/*.css

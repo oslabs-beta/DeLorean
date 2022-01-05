@@ -14,7 +14,8 @@
       "js": ["contentScript.js"]
     }
   ],
-  "permissions": ["storage", "tabs", "activeTab", "scripting"],
+  "permissions": ["storage", "tabs", "activeTab", "scripting", "debugger"],
+  "host_permissions": ["http://*/*", "https://*/*", "<all_urls>"],
   "action": {
     "default_icon": {
       "128": "./SvelteDeLorean.png"
