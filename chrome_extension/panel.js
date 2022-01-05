@@ -43,10 +43,19 @@
   //     document.body.style.backgroundColor="orange";
   //   }
   // );
-  
+
+//creates a panel within Chrome DevTools named DeLorean
 chrome.devtools.panels.create(
   "DeLorean",                 // title
   "./SvelteDeLorean.png",           // icon
   "./panel.html",
-  (panel) => {}
+  (panel) => {
+    //event listener for panel being shown
+    panel.onShown.addListener(() =>
+      chrome.devtools.inspectedWindow.eval(
+        'window.document.addEventListener("SvelteDOMInsert", (e) => console.log("SvelteDOMInsert", e.detail))',
+        (result, err) => err && console.error(err)
+      )
+    )
+  }
 );
