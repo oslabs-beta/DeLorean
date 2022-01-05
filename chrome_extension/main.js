@@ -1,4 +1,5 @@
 import { getNode } from '/svelte-listener/svelte.js';
+import App from '/src/App.svelte';
 
 console.log('getNode function: ' + getNode);
 
@@ -18,3 +19,5 @@ connectButton.addEventListener('click', () => {
   mainToBgPort.postMessage({content: 'testing port from main to bg service worker'});
 
 })
+
+new App
