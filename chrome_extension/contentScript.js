@@ -1,69 +1,199 @@
-// SEPARATE EXECUTION CONTEXT FROM BACKGROUND.JS
-// the only way to interact with background.js (out dev tool) is with messages
-// This is also the place to manipulate the dom
+import {
+  getNode,
+  addNodeListener,
+  startProfiler,
+  stopProfiler,
+  getSvelteVersion,
+} from './svelte-listener';
 
-// import { getNode } from 'svelte-listener';
+window.__svelte_devtools_inject_state = function (id, key, value) {
+  let component = getNode(id).detail;
+  component.$inject_state({ [key]: value });
+};
 
-console.log('from content script-- document ready state: ', document.readyState);
-console.log('from content script-- chrome object: ', chrome)
+window.__svelte_devtools_select_element = function (element) {
+  let node = getNode(element);
+  if (node) window.postMessage({ type: 'inspect', node: serializeNode(node) });
+};
 
-// fires emitter to background.js (the callback function parameter is necessary for this method to work)
-chrome.runtime.sendMessage({greeting: 'hello'}, (response) => {
-  console.log(response.farewell);
-});
+window.addEventListener('message', (e) => handleMessage(e.data), false);
 
-// listen for port from background.js
-let bgPort;
-chrome.runtime.onConnect.addListener((port) => {
-  port.onMessage.addListener((msg) => {
-    console.log('this is the port in content script', port);
-    bgPort = port;
-    console.log(msg);
-  });
-});
+function handleMessage(msg) {
+  const node = getNode(msg.nodeId);
 
-// listen for clicks on (app's) main page 
-window.document.addEventListener('click', (e) => {
-  if (bgPort) {
-    bgPort.postMessage({content: 'event: ' + JSON.stringify(e)})
+  switch (msg.type) {
+    case 'setSelected':
+      if (node) window.$s = node.detail;
+      break;
+
+    case 'startProfiler':
+      startProfiler();
+      break;
+
+    case 'stopProfiler':
+      stopProfiler();
+      break;
   }
-})
+}
 
-// let _id =0;
-// window.document.addEventListener('click', () => {
-//   window.document.addEventListener("SvelteDOMInsert", (e) => {
-//     // e.isTrusted = true; (doesn't work, is trusted is a read-only property)
-//   console.log('event: ' + JSON.stringify(e))
-//   const node = {
-//     id: _id++,
-//     type:
-//       e.detail.node.nodeType == 1
-//         ? "element"
-//         : e.detail.node.nodeValue && e.detail.node.nodeValue != " "
-//         ? "text"
-//         : "anchor",
-//     detail: e.detail.node,
-//     tagName: e.detail.node.nodeName.toLowerCase(),
-//     // parentBlock: currentBlock,
-//     children: [],
-//   };
-//   console.log("DOMINSERT NODE: ", node)
-// })
-//   if (bgPort) {
-//     console.log('target element: ', document.getElementById('target'))
-//     bgPort.postMessage({body: document.getElementById('target').innerHTML, port: bgPort});
-//     console.log('bgPort connected');
-//   } else (console.log('bg port is false still'))
-// })
+function clone(value, seen = new Map()) {
+  switch (typeof value) {
+    case 'function':
+      return { __isFunction: true, source: value.toString(), name: value.name };
+    case 'symbol':
+      return { __isSymbol: true, name: value.toString() };
+    case 'object':
+      if (value === window || value === null) return null;
+      if (Array.isArray(value)) return value.map((o) => clone(o, seen));
+      if (seen.has(value)) return {};
 
+      const o = {};
+      seen.set(value, o);
 
+      for (const [key, v] of Object.entries(value)) {
+        o[key] = clone(v, seen);
+      }
 
-  
-// if (bgPort) {
-//   bgPort.postMessage({body: `SvelteDOMInsert ${node}`});
-//   console.log('registered a svelteDOM event');
-// } else (console.log('bg port is false still'))
+      return o;
+    default:
+      return value;
+  }
+}
 
-// attempting to create a long-lived connection between contentScript and background.js
-// const port = chrome.runtime.connect();
-// port.postMessage({msg: 'this one is from a port connection'});
+function gte(major, minor, patch) {
+  const version = (getSvelteVersion() || '0.0.0')
+    .split('.')
+    .map((n) => parseInt(n));
+  return (
+    version[0] > major ||
+    (version[0] == major &&
+      (version[1] > minor || (version[1] == minor && version[2] >= patch)))
+  );
+}
+
+let _shouldUseCapture = null;
+function shouldUseCapture() {
+  return _shouldUseCapture == null
+    ? (_shouldUseCapture = gte(3, 19, 2))
+    : _shouldUseCapture;
+}
+
+function serializeNode(node) {
+  const serialized = {
+    id: node.id,
+    type: node.type,
+    tagName: node.tagName,
+  };
+  switch (node.type) {
+    case 'component': {
+      if (!node.detail.$$) {
+        serialized.detail = {};
+        break;
+      }
+
+      const internal = node.detail.$$;
+      const props = Array.isArray(internal.props)
+        ? internal.props // Svelte < 3.13.0 stored props names as an array
+        : Object.keys(internal.props);
+      let ctx = clone(
+        shouldUseCapture() ? node.detail.$capture_state() : internal.ctx
+      );
+      if (ctx === undefined) ctx = {};
+
+      serialized.detail = {
+        attributes: props.flatMap((key) => {
+          const value = ctx[key];
+          delete ctx[key];
+          return value === undefined
+            ? []
+            : { key, value, isBound: key in internal.bound };
+        }),
+        listeners: Object.entries(internal.callbacks).flatMap(
+          ([event, value]) =>
+            value.map((o) => ({ event, handler: o.toString() }))
+        ),
+        ctx: Object.entries(ctx).map(([key, value]) => ({ key, value })),
+      };
+      break;
+    }
+
+    case 'element': {
+      const element = node.detail;
+      serialized.detail = {
+        attributes: Array.from(element.attributes).map((attr) => ({
+          key: attr.name,
+          value: attr.value,
+        })),
+        listeners: element.__listeners
+          ? element.__listeners.map((o) => ({
+              ...o,
+              handler: o.handler.toString(),
+            }))
+          : [],
+      };
+
+      break;
+    }
+
+    case 'text': {
+      serialized.detail = {
+        nodeValue: node.detail.nodeValue,
+      };
+      break;
+    }
+
+    case 'iteration':
+    case 'block': {
+      const { ctx, source } = node.detail;
+      serialized.detail = {
+        ctx: Object.entries(clone(ctx)).map(([key, value]) => ({
+          key,
+          value,
+        })),
+        source: source.substring(source.indexOf('{'), source.indexOf('}') + 1),
+      };
+    }
+  }
+
+  return serialized;
+}
+
+addNodeListener({
+  add(node, anchor) {
+    window.postMessage({
+      body: {
+        target: node.parent ? node.parent.id : null,
+        anchor: anchor ? anchor.id : null,
+        type: 'addNode',
+        node: serializeNode(node),
+      },
+    });
+  },
+
+  remove(node) {
+    window.postMessage({
+      body: {
+        type: 'removeNode',
+        node: serializeNode(node),
+      },
+    });
+  },
+
+  update(node) {
+    window.postMessage({
+      body: {
+        type: 'updateNode',
+        node: serializeNode(node),
+      },
+    });
+  },
+
+  profile(frame) {
+    window.postMessage({
+      body: {
+        type: 'updateProfile',
+        frame,
+      },
+    });
+  },
+});

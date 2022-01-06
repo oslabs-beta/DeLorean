@@ -11,6 +11,7 @@ connectButton.addEventListener("click", () => {
       "in the response callback in main.js, got this back: " + response.body
     );
   });
+  
 
   const mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.js
 

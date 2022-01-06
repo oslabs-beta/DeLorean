@@ -1,77 +1,77 @@
-import { add, update, remove } from './listener.js'
-import { updateProfile } from './profiler.js'
+import { add, update, remove } from './listener.js';
+import { updateProfile } from './profiler.js';
 
-const nodeMap = new Map()
-let _id = 0
-let currentBlock
+const nodeMap = new Map();
+let _id = 0;
+let currentBlock;
 
 export function getNode(id) {
-  return nodeMap.get(id)
+  return nodeMap.get(id);
 }
 
 export function getAllNodes() {
-  nodeMap.values()
+  nodeMap.values();
 }
 
-const rootNodes = []
+const rootNodes = [];
 export function getRootNodes() {
-  return rootNodes
+  return rootNodes;
 }
 
-let svelteVersion = null
+let svelteVersion = null;
 export function getSvelteVersion() {
-  return svelteVersion
+  return svelteVersion;
 }
 
 function addNode(node, target, anchor) {
-  nodeMap.set(node.id, node)
-  nodeMap.set(node.detail, node)
+  nodeMap.set(node.id, node);
+  nodeMap.set(node.detail, node);
 
-  let targetNode = nodeMap.get(target)
+  let targetNode = nodeMap.get(target);
   if (!targetNode || targetNode.parentBlock != node.parentBlock) {
-    targetNode = node.parentBlock
+    targetNode = node.parentBlock;
   }
 
-  node.parent = targetNode
+  node.parent = targetNode;
 
-  const anchorNode = nodeMap.get(anchor)
+  const anchorNode = nodeMap.get(anchor);
 
   if (targetNode) {
-    let index = -1
-    if (anchorNode) index = targetNode.children.indexOf(anchorNode)
+    let index = -1;
+    if (anchorNode) index = targetNode.children.indexOf(anchorNode);
 
     if (index != -1) {
-      targetNode.children.splice(index, 0, node)
+      targetNode.children.splice(index, 0, node);
     } else {
-      targetNode.children.push(node)
+      targetNode.children.push(node);
     }
   } else {
-    rootNodes.push(node)
+    rootNodes.push(node);
   }
 
-  add(node, anchorNode)
+  add(node, anchorNode);
 }
 
 function removeNode(node) {
-  if (!node) return
+  if (!node) return;
 
-  nodeMap.delete(node.id)
-  nodeMap.delete(node.detail)
+  nodeMap.delete(node.id);
+  nodeMap.delete(node.detail);
 
-  const index = node.parent.children.indexOf(node)
-  node.parent.children.splice(index, 1)
-  node.parent = null
+  const index = node.parent.children.indexOf(node);
+  node.parent.children.splice(index, 1);
+  node.parent = null;
 
-  remove(node)
+  remove(node);
 }
 
 function updateElement(element) {
-  const node = nodeMap.get(element)
-  if (!node) return
+  const node = nodeMap.get(element);
+  if (!node) return;
 
-  if (node.type == 'anchor') node.type = 'text'
+  if (node.type == 'anchor') node.type = 'text';
 
-  update(node)
+  update(node);
 }
 
 function insert(element, target, anchor) {
@@ -86,77 +86,79 @@ function insert(element, target, anchor) {
     detail: element,
     tagName: element.nodeName.toLowerCase(),
     parentBlock: currentBlock,
-    children: []
-  }
-  addNode(node, target, anchor)
+    children: [],
+  };
+  addNode(node, target, anchor);
 
   for (const child of element.childNodes) {
-    if (!nodeMap.has(child)) insert(child, element)
+    if (!nodeMap.has(child)) insert(child, element);
   }
 }
 
-function svelteRegisterComponent (e) {
-  const { component, tagName } = e.detail
+function svelteRegisterComponent(e) {
+  const { component, tagName } = e.detail;
 
-  const node = nodeMap.get(component.$$.fragment)
+  const node = nodeMap.get(component.$$.fragment);
   if (node) {
-    nodeMap.delete(component.$$.fragment)
+    nodeMap.delete(component.$$.fragment);
 
-    node.detail = component
-    node.tagName = tagName
+    node.detail = component;
+    node.tagName = tagName;
 
-    update(node)
+    update(node);
   } else {
     nodeMap.set(component.$$.fragment, {
       type: 'component',
       detail: component,
-      tagName
-    })
+      tagName,
+    });
   }
 }
 
 // Ugly hack b/c promises are resolved/rejected outside of normal render flow
-let lastPromiseParent = null
-function svelteRegisterBlock (e) {
-  const { type, id, block, ...detail } = e.detail
-  const tagName = type == 'pending' ? 'await' : type
-  const nodeId = _id++
+let lastPromiseParent = null;
+function svelteRegisterBlock(e) {
+  console.log('this is the e.detail from svelteRegisterBlock', e);
+  const { type, id, block, ...detail } = e.detail;
+  console.log('this is the type from svelteRegisterBlock', type);
+  const tagName = type == 'pending' ? 'await' : type;
+  const nodeId = _id++;
 
   if (block.m) {
-    const mountFn = block.m
+    const mountFn = block.m;
     block.m = (target, anchor) => {
-      const parentBlock = currentBlock
+      const parentBlock = currentBlock;
       let node = {
         id: nodeId,
         type: 'block',
         detail,
         tagName,
         parentBlock,
-        children: []
-      }
+        children: [],
+      };
 
       switch (type) {
         case 'then':
         case 'catch':
-          if (!node.parentBlock) node.parentBlock = lastPromiseParent
-          break
+          if (!node.parentBlock) node.parentBlock = lastPromiseParent;
+          break;
 
         case 'slot':
-          node.type = 'slot'
-          break
+          node.type = 'slot';
+          break;
 
         case 'component':
-          const componentNode = nodeMap.get(block)
+          const componentNode = nodeMap.get(block);
           if (componentNode) {
-            nodeMap.delete(block)
-            Object.assign(node, componentNode)
+            nodeMap.delete(block);
+            Object.assign(node, componentNode);
           } else {
             Object.assign(node, {
               type: 'component',
               tagName: 'Unknown',
-              detail: {}
-            })
-            nodeMap.set(block, node)
+              detail: {},
+            });
+            nodeMap.set(block, node);
           }
 
           Promise.resolve().then(
@@ -164,135 +166,144 @@ function svelteRegisterBlock (e) {
               node.detail.$$ &&
               Object.keys(node.detail.$$.bound).length &&
               update(node)
-          )
-          break
+          );
+          break;
       }
 
       if (type == 'each') {
-        let group = nodeMap.get(parentBlock.id + id)
+        let group = nodeMap.get(parentBlock.id + id);
         if (!group) {
           group = {
             id: _id++,
             type: 'block',
             detail: {
               ctx: {},
-              source: detail.source
+              source: detail.source,
             },
             tagName: 'each',
             parentBlock,
-            children: []
-          }
-          nodeMap.set(parentBlock.id + id, group)
-          addNode(group, target, anchor)
+            children: [],
+          };
+          nodeMap.set(parentBlock.id + id, group);
+          addNode(group, target, anchor);
         }
-        node.parentBlock = group
-        node.type = 'iteration'
-        addNode(node, group, anchor)
+        node.parentBlock = group;
+        node.type = 'iteration';
+        addNode(node, group, anchor);
       } else {
-        addNode(node, target, anchor)
+        addNode(node, target, anchor);
       }
 
-      currentBlock = node
-      updateProfile(node, 'mount', mountFn, target, anchor)
-      currentBlock = parentBlock
-    }
+      currentBlock = node;
+      updateProfile(node, 'mount', mountFn, target, anchor);
+      currentBlock = parentBlock;
+    };
   }
 
   if (block.p) {
-    const patchFn = block.p
+    const patchFn = block.p;
     block.p = (changed, ctx) => {
-      const parentBlock = currentBlock
-      currentBlock = nodeMap.get(nodeId)
+      const parentBlock = currentBlock;
+      currentBlock = nodeMap.get(nodeId);
 
-      update(currentBlock)
+      update(currentBlock);
 
-      updateProfile(currentBlock, 'patch', patchFn, changed, ctx)
+      updateProfile(currentBlock, 'patch', patchFn, changed, ctx);
 
-      currentBlock = parentBlock
-    }
+      currentBlock = parentBlock;
+    };
   }
 
   if (block.d) {
-    const detachFn = block.d
-    block.d = detaching => {
-      const node = nodeMap.get(nodeId)
+    const detachFn = block.d;
+    block.d = (detaching) => {
+      const node = nodeMap.get(nodeId);
 
       if (node) {
-        if (node.tagName == 'await') lastPromiseParent = node.parentBlock
+        if (node.tagName == 'await') lastPromiseParent = node.parentBlock;
 
-        removeNode(node)
+        removeNode(node);
       }
 
-      updateProfile(node, 'detach', detachFn, detaching)
-    }
+      updateProfile(node, 'detach', detachFn, detaching);
+    };
   }
 }
 
-function svelteDOMInsert (e) {
-  console.log('event is', e);
-  console.log('event is', JSON.stringify(e));
-  const { node: element, target, anchor } = e.detail
+function svelteDOMInsert(e) {
+  console.log('this is from svelte listener, event is', e);
+  console.log('this is from svelte listener, event is', JSON.stringify(e));
+  const { node: element, target, anchor } = e.detail;
 
-  insert(element, target, anchor)
+  insert(element, target, anchor);
 }
 
-function svelteDOMRemove (e) {
-  const node = nodeMap.get(e.detail.node)
-  if (!node) return
+function svelteDOMRemove(e) {
+  const node = nodeMap.get(e.detail.node);
+  if (!node) return;
 
-  removeNode(node)
+  removeNode(node);
 }
 
-function svelteDOMAddEventListener (e) {
-  const { node, ...detail } = e.detail
+function svelteDOMAddEventListener(e) {
+  const { node, ...detail } = e.detail;
 
-  if (!node.__listeners) node.__listeners = []
+  if (!node.__listeners) node.__listeners = [];
 
-  node.__listeners.push(detail)
+  node.__listeners.push(detail);
 }
 
-function svelteDOMRemoveEventListener (e) {
-  const { node, event, handler, modifiers } = e.detail
+function svelteDOMRemoveEventListener(e) {
+  const { node, event, handler, modifiers } = e.detail;
 
-  if (!node.__listeners) return
+  if (!node.__listeners) return;
 
   const index = node.__listeners.findIndex(
-    o => o.event == event && o.handler == handler && o.modifiers == modifiers
-  )
+    (o) => o.event == event && o.handler == handler && o.modifiers == modifiers
+  );
 
-  if (index == -1) return
+  if (index == -1) return;
 
-  node.__listeners.splice(index, 1)
+  node.__listeners.splice(index, 1);
 }
 
-function svelteUpdateNode (e) {
-  updateElement(e.detail.node)
+function svelteUpdateNode(e) {
+  updateElement(e.detail.node);
 }
 
-function setup (root) {
-  root.addEventListener('SvelteRegisterBlock', e => svelteVersion = e.detail.version, { once: true })
+function setup(root) {
+  root.addEventListener(
+    'SvelteRegisterBlock',
+    (e) => (svelteVersion = e.detail.version),
+    { once: true }
+  );
 
-  root.addEventListener('SvelteRegisterComponent', svelteRegisterComponent)
-  root.addEventListener('SvelteRegisterBlock', svelteRegisterBlock)
-  root.addEventListener('SvelteDOMInsert', svelteDOMInsert)
-  root.addEventListener('SvelteDOMRemove', svelteDOMRemove)
-  root.addEventListener('SvelteDOMAddEventListener', svelteDOMAddEventListener)
-  root.addEventListener('SvelteDOMRemoveEventListener', svelteDOMRemoveEventListener)
-  root.addEventListener('SvelteDOMSetData', svelteUpdateNode)
-  root.addEventListener('SvelteDOMSetProperty', svelteUpdateNode)
-  root.addEventListener('SvelteDOMSetAttribute', svelteUpdateNode)
-  root.addEventListener('SvelteDOMRemoveAttribute', svelteUpdateNode)
+  root.addEventListener('SvelteRegisterComponent', svelteRegisterComponent);
+  root.addEventListener('SvelteRegisterBlock', svelteRegisterBlock);
+  root.addEventListener('SvelteDOMInsert', svelteDOMInsert);
+  root.addEventListener('SvelteDOMRemove', svelteDOMRemove);
+  root.addEventListener('SvelteDOMAddEventListener', svelteDOMAddEventListener);
+  root.addEventListener(
+    'SvelteDOMRemoveEventListener',
+    svelteDOMRemoveEventListener
+  );
+  root.addEventListener('SvelteDOMSetData', svelteUpdateNode);
+  root.addEventListener('SvelteDOMSetProperty', svelteUpdateNode);
+  root.addEventListener('SvelteDOMSetAttribute', svelteUpdateNode);
+  root.addEventListener('SvelteDOMRemoveAttribute', svelteUpdateNode);
 }
 
-setup(window.document)
+setup(window.document);
 for (let i = 0; i < window.frames.length; i++) {
-  const frame = window.frames[i]
-  const root = frame.document
-  setup(root)
+  const frame = window.frames[i];
+  const root = frame.document;
+  setup(root);
   const timer = setInterval(() => {
-    if (root == frame.document) return
-    clearTimeout(timer)
-    setup(frame.document)
-  }, 0)
-  root.addEventListener('readystatechange', e => clearTimeout(timer), { once: true })
+    if (root == frame.document) return;
+    clearTimeout(timer);
+    setup(frame.document);
+  }, 0);
+  root.addEventListener('readystatechange', (e) => clearTimeout(timer), {
+    once: true,
+  });
 }

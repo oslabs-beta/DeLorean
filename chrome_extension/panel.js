@@ -12,7 +12,7 @@
 //     panel.onShown.removeListener(listener);
 //     panel.onHidden.addListener(() => {
 //       const test = document.getElementById('test');
-      
+
 //     })
 //     panel.onShown.addListener((window) => {
 //         console.log('running callback');
@@ -37,25 +37,43 @@
 //         sidebar.setPage('./sidebar.html');
 // });
 // }
-  
-  // chrome.scripting.executeScript(
-  //   () => {
-  //     document.body.style.backgroundColor="orange";
-  //   }
-  // );
 
+// chrome.scripting.executeScript(
+//   () => {
+//     document.body.style.backgroundColor="orange";
+//   }
+// );
+
+function handleError(error) {
+  if (error.isError) {
+    console.log(`Devtools error: ${error.code}`);
+  } else {
+    console.log(`JavaScript error: ${error.value}`);
+  }
+}
+
+function handleResult(result) {
+  console.log(result);
+  if (result[0] !== undefined) {
+    console.log(`result of the eval method: ${result[0]}`);
+  } else if (result[1]) {
+    handleError(result[1]);
+  }
+}
+
+const evalExpression =
+  "window.document.addEventListener('SvelteDOMInsert', (e) => console.log('SvelteDOMInsert', e.detail))";
 //creates a panel within Chrome DevTools named DeLorean
 chrome.devtools.panels.create(
-  "DeLorean",                 // title
-  "./SvelteDeLorean.png",           // icon
-  "./panel.html",
+  'DeLorean', // title
+  './SvelteDeLorean.png', // icon
+  './panel.html',
   (panel) => {
-    //event listener for panel being shown
-    panel.onShown.addListener(() =>
+    panel.onShown.addListener(() => {
       chrome.devtools.inspectedWindow.eval(
-        'window.document.addEventListener("SvelteDOMInsert", (e) => console.log("SvelteDOMInsert", e.detail))',
+        'if (window.__svelte_devtools_select_element) window.__svelte_devtools_select_element($0)',
         (result, err) => err && console.error(err)
-      )
-    )
+      );
+    });
   }
 );
