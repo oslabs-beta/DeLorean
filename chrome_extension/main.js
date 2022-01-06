@@ -17,4 +17,4 @@ connectButton.addEventListener('click', () => {
   });
   mainToBgPort.postMessage({body: 'testing port from main to bg'});
 
-})
+export default test;
