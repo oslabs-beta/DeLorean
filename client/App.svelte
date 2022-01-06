@@ -4,10 +4,7 @@
   let mph: number = 30;
   let excitement: string = "";
   let notUntil5Counter = 0;
-  log();
   let test = "test";
-  let changeGreet = "hi aram";
-  // $: speedBanner = `${mph} `.repeat(mph);
 
   function timeTravel(): void {
     addChild();
@@ -19,14 +16,9 @@
   }
 
   let parent: string = "parent";
-  let things = ["toy"];
+  let things = ["toy", "pain", "difficulty"];
   function addChild() {
-    // const child = document.createElement('button');
-    // parent.appendChild(child);
     things = [...things, "another thing"];
-    const target = document.getElementById("target");
-    // target.setAttribute('class', 'test')
-    class1 = "testclass";
   }
 
   // TEST FUNCTION TO LOG EVENTS
@@ -52,19 +44,15 @@
     {mph} miles per hour{excitement}
   </h1>
   <button on:click={timeTravel}>Time travel! {test}</button>
-  <!-- <p class="banner">{speedBanner}</p> -->
-  <div class={parent} />
-  <Test />
   <p>Won't display until 5 clicks:</p>
   <span>{notUntil5Counter < 5 ? "" : notUntil5Counter}</span>
   <button on:click={() => (notUntil5Counter += 1)}>Add 1 to Counter</button>
-  <!-- <button on:click={addChild}>add child</button> -->
+  <ul>
+    {#each things as thing}
+      <li>{thing}</li>
+    {/each}
+  </ul>
 </div>
-<ul>
-  {#each things as thing}
-    <li>{thing}</li>
-  {/each}
-</ul>
 
 <style>
   h1 {
