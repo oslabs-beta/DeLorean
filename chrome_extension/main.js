@@ -9,12 +9,6 @@ connectButton.addEventListener('click', () => {
   });
 });
   
-  // chrome.runtime.onMessage.addListener((msg) => {
-  //   if (msg.body.ctx) {
-  //   panelP.innerText = panelP.innerText + '\n' + msg.body.ctx;
-  //   }
-  // })
-
   const mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.j
   mainToBgPort.onMessage.addListener((msg, port) => {
     if (msg.body.ctx) {

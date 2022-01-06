@@ -1,9 +1,9 @@
-// This is a service worker. Its console logs will appear in a service worker console
+// This is a background page, previously a service worker. Its console logs will appear in a service worker console
 
 console.log('console log from global in background.js');
 
 let mainPort;
-// listen for message from main, open port to contentScript if it's an openPort message
+// listen for message from main, run content script if asked
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log(
     `message received ${
@@ -16,11 +16,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({ body: 'trying to run the content script' });
     chrome.tabs.executeScript({ file: './output/bundledContentScript.js' });
   }
-  // if (request.body === 'openPort') {
-  //   console.log('attempting to open port from background.js');
-  //   sendResponse({ body: 'trying to open port' });
-  //   openPort();
-  // }
+  // pass any received message along to main.js
   if (request) {
     if (mainPort) {
       mainPort.postMessage({body: request.body})
@@ -32,37 +28,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 let tabId;
 let contentScriptPort;
-
-
-// function openPort() {
-//   // Query tab
-//   let queryOptions = { active: true, currentWindow: true };
-//   chrome.tabs.query(queryOptions, setupPort);
-
-//   function setupPort(tabs) {
-//     console.log('tabs', tabs);
-
-//     // Open up connection w/ contentScript.js
-//     const port = chrome.tabs.connect(tabs[0].id, {
-//       name: 'contentScript',
-//     });
-//     contentScriptPort = port;
-//     contentScriptPort.postMessage({
-//       body: 'test message from background to contentsript over port',
-//     });
-
-//     // listen for messages from contentScript. print them and pass along to main
-//     contentScriptPort.onMessage.addListener(function (msg) {
-//       if (msg) {
-//         console.log('this is msg from port (content script): ', msg);
-//       }
-//       if (mainPort) {
-//         mainPort.postMessage({ body: `${msg.body ? msg.body : msg}` });
-//       }
-//     });
-//   }
-//   // chrome.scripting.executeScript({target: {tabId: tabId, allFrames: true}, files: ['contentScript.js']})
-// }
 
 // listen for port connection from main.js
 chrome.runtime.onConnect.addListener((port) => {
