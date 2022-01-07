@@ -1,9 +1,18 @@
 <script>
-  let arr = [0, 1, 2, 3]
+  export let compState;
 </script>
 
 <div>
-  {#each arr as test}
-  <button>{test}</button>   
+  <slot></slot>
+  <ul>
+  {#each compState as state}
+  <li>{state}</li>   
   {/each}
+  </ul>
 </div>
+
+<style>
+  li {
+    color: blue;
+  }
+</style>
