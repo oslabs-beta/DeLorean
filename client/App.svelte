@@ -15,38 +15,41 @@
     }
   }
 
-  let parent: string = "parent";
-  let things = ["toy", "pain", "difficulty"];
+  // let parent: string = "parent";
+  // let things = ["toy", "ice cream", "skate board"];
+  // function addChild() {
+  //   things = [...things, "another thing"];
+  // }
+  // GOAL: MAKE THIS WORK SO THAT NO SYNONYM IS REPEATED AND 'OUT OF IDEAS' PRINTS AFTER THEY'VE ALL BEEN USED
+  const synonyms = ['pain','agony','suffering','difficulty', 'regret', 'torture', 'torment', 'never-ending', 'sorrow', 'aching', 'confusion', 'why', 'too late'];
+  let things = ["toy", "ice cream", "skate board"];
+  let newThing;
+  // let seen = [];
+  const seen = [];
   function addChild() {
-    things = [...things, "another thing"];
-  }
-
-  // TEST FUNCTION TO LOG EVENTS
-  function log() {
-    // window.document.addEventListener('SvelteRegisterBlock', e => svelteVersion = e.detail.version, { once: true })
-    // window.document.addEventListener('SvelteRegisterComponent', (e) => console.log('SvelteRegisterComponent', e.detail))
-    // // window.document.addEventListener('SvelteRegisterBlock', (e) => console.log('SvelteRegisterBlock', e.detail.ctx[e.detail.ctx.length -1]))
-    // window.document.addEventListener('SvelteRegisterBlock', (e) => console.log('SvelteRegisterBlock', e.detail.ctx))
-    // window.document.addEventListener('SvelteDOMInsert', (e) => console.log('SvelteDOMInsert', e.detail))
-    // window.document.addEventListener('SvelteDOMRemove',(e) => console.log('SvelteDOMRemove', e.detail))
-    // window.document.addEventListener('SvelteDOMAddEventListener', (e) => console.log('SvelteDOMAddEventListener', e.detail))
-    // window.document.addEventListener('SvelteDOMRemoveEventListener', (e) => console.log('SvelteDOMRemoveEventListener', e.detail))
-    // window.document.addEventListener('SvelteDOMSetData', (e) => console.log('SvelteDOMSetData', e.detail))
-    // window.document.addEventListener('SvelteDOMSetProperty', (e) => console.log('SvelteDOMSetProperty', e.detail))
-    // window.document.addEventListener('SvelteDOMSetAttribute', (e) => console.log('SvelteDOMSetAttribute', e.detail))
-    // window.document.addEventListener('SvelteDOMRemoveAttribute', (e) => console.log('SvelteDOMRemoveAttribute', e.detail))
+    if (seen.length < synonyms.length - 1) {
+      newThing = synonyms[Math.floor(Math.random() * (synonyms.length - 1))];
+      while (seen.includes(newThing)) {
+        newThing = synonyms[Math.floor(Math.random() * (synonyms.length - 1))]
+      }
+      // seen = [...seen, newThing];
+      seen.push(newThing);
+    } else {
+      newThing = 'out of ideas :(';
+    }
+    things = [...things, newThing];
   }
 </script>
 
-<div class={class1} id="target">
+<div class="container" id="target">
   <h1>
     {mph < 88 ? "Cruising at" : "Approaching"}
     {mph} miles per hour{excitement}
   </h1>
   <button on:click={timeTravel}>Time travel! {test}</button>
-  <p>Won't display until 5 clicks:</p>
-  <span>{notUntil5Counter < 5 ? "" : notUntil5Counter}</span>
-  <button on:click={() => (notUntil5Counter += 1)}>Add 1 to Counter</button>
+  <p>What's on your mind?</p>
+  <!-- <span>{notUntil5Counter < 5 ? "" : notUntil5Counter}</span>
+  <button on:click={() => (notUntil5Counter += 1)}>Add 1 to Counter</button> -->
   <ul>
     {#each things as thing}
       <li>{thing}</li>
@@ -69,6 +72,12 @@
     color: brown;
     font-style: italic;
   }
+  button:hover{
+    background-color: brown;
+    color: wheat;
+    transition: .5s;
+  }
+
   .container {
     display: flex;
     flex-direction: column;
@@ -83,9 +92,15 @@
     max-width: fit-content;
     text-align: center;
   } */
-
-  .test {
+  li {
+    list-style: none;
+  }
+  li:before {
+    content: "🚀";
+    margin: 0 16px 0 0;
+  }
+  /* .test {
     font-size: large;
     color: aqua;
-  }
+  } */
 </style>

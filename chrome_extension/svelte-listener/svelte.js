@@ -17,7 +17,7 @@ function setup(root) {
   );
   root.addEventListener('SvelteDOMSetData', (e) => sendMessage(parse(e.detail)));
   root.addEventListener('SvelteDOMSetProperty', (e) => sendMessage(parse(e.detail)));
-  root.addEventListener('SvelteDOMSetAttribute', (e) => sendMessage(oarse(e.detail)));
+  root.addEventListener('SvelteDOMSetAttribute', (e) => sendMessage(parse(e.detail)));
   root.addEventListener('SvelteDOMRemoveAttribute', (e) => sendMessage(parse(e.detail)));
 }
 

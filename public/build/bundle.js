@@ -1,6 +1,6 @@
 
 (function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35730/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
-var app = (function () {
+var demoApp = (function () {
     'use strict';
 
     function noop() { }
@@ -26,9 +26,6 @@ var app = (function () {
     }
     function is_empty(obj) {
         return Object.keys(obj).length === 0;
-    }
-    function null_to_empty(value) {
-        return value == null ? '' : value;
     }
     function append(target, node) {
         target.appendChild(node);
@@ -160,31 +157,11 @@ var app = (function () {
         }
     }
     const outroing = new Set();
-    let outros;
     function transition_in(block, local) {
         if (block && block.i) {
             outroing.delete(block);
             block.i(local);
         }
-    }
-    function transition_out(block, local, detach, callback) {
-        if (block && block.o) {
-            if (outroing.has(block))
-                return;
-            outroing.add(block);
-            outros.c.push(() => {
-                outroing.delete(block);
-                if (callback) {
-                    if (detach)
-                        block.d(1);
-                    callback();
-                }
-            });
-            block.o(local);
-        }
-    }
-    function create_component(block) {
-        block && block.c();
     }
     function mount_component(component, target, anchor, customElement) {
         const { fragment, on_mount, on_destroy, after_update } = component.$$;
@@ -519,7 +496,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (61:2) {#each things as thing}
+    // (53:4) {#each things as thing}
     function create_each_block(ctx) {
     	let li;
     	let t_value = /*thing*/ ctx[11] + "";
@@ -529,14 +506,15 @@ var app = (function () {
     		c: function create() {
     			li = element("li");
     			t = text(t_value);
-    			add_location(li, file, 61, 4, 2802);
+    			attr_dev(li, "class", "svelte-bn10x2");
+    			add_location(li, file, 53, 6, 1731);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
     			append_dev(li, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*things*/ 16 && t_value !== (t_value = /*thing*/ ctx[11] + "")) set_data_dev(t, t_value);
+    			if (dirty & /*things*/ 4 && t_value !== (t_value = /*thing*/ ctx[11] + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(li);
@@ -547,7 +525,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(61:2) {#each things as thing}",
+    		source: "(53:4) {#each things as thing}",
     		ctx
     	});
 
@@ -555,40 +533,23 @@ var app = (function () {
     }
 
     function create_fragment(ctx) {
-    	let div1;
+    	let div;
     	let h1;
-    	let t0_value = (/*mph*/ ctx[1] < 88 ? "Cruising at" : "Approaching") + "";
+    	let t0_value = (/*mph*/ ctx[0] < 88 ? "Cruising at" : "Approaching") + "";
     	let t0;
     	let t1;
     	let t2;
     	let t3;
     	let t4;
     	let t5;
-    	let button0;
+    	let button;
     	let t8;
-    	let div0;
-    	let t9;
-    	let test_1;
-    	let t10;
     	let p;
-    	let t12;
-    	let span;
-
-    	let t13_value = (/*notUntil5Counter*/ ctx[3] < 5
-    	? ""
-    	: /*notUntil5Counter*/ ctx[3]) + "";
-
-    	let t13;
-    	let t14;
-    	let button1;
-    	let div1_class_value;
-    	let t16;
+    	let t10;
     	let ul;
-    	let current;
     	let mounted;
     	let dispose;
-    	test_1 = new Test({ $$inline: true });
-    	let each_value = /*things*/ ctx[4];
+    	let each_value = /*things*/ ctx[2];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -598,108 +559,70 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div1 = element("div");
+    			div = element("div");
     			h1 = element("h1");
     			t0 = text(t0_value);
     			t1 = space();
-    			t2 = text(/*mph*/ ctx[1]);
+    			t2 = text(/*mph*/ ctx[0]);
     			t3 = text(" miles per hour");
-    			t4 = text(/*excitement*/ ctx[2]);
+    			t4 = text(/*excitement*/ ctx[1]);
     			t5 = space();
-    			button0 = element("button");
-    			button0.textContent = `Time travel! ${/*test*/ ctx[5]}`;
+    			button = element("button");
+    			button.textContent = `Time travel! ${/*test*/ ctx[3]}`;
     			t8 = space();
-    			div0 = element("div");
-    			t9 = space();
-    			create_component(test_1.$$.fragment);
-    			t10 = space();
     			p = element("p");
-    			p.textContent = "Won't display until 5 clicks:";
-    			t12 = space();
-    			span = element("span");
-    			t13 = text(t13_value);
-    			t14 = space();
-    			button1 = element("button");
-    			button1.textContent = "Add 1 to Counter";
-    			t16 = space();
+    			p.textContent = "What's on your mind?";
+    			t10 = space();
     			ul = element("ul");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(h1, "class", "svelte-1s9ebut");
-    			add_location(h1, file, 46, 2, 2283);
-    			attr_dev(button0, "class", "svelte-1s9ebut");
-    			add_location(button0, file, 50, 2, 2382);
-    			attr_dev(div0, "class", "" + (null_to_empty(/*parent*/ ctx[7]) + " svelte-1s9ebut"));
-    			add_location(div0, file, 52, 2, 2490);
-    			add_location(p, file, 54, 2, 2526);
-    			add_location(span, file, 55, 2, 2565);
-    			attr_dev(button1, "class", "svelte-1s9ebut");
-    			add_location(button1, file, 56, 2, 2627);
-    			attr_dev(div1, "class", div1_class_value = "" + (null_to_empty(/*class1*/ ctx[0]) + " svelte-1s9ebut"));
-    			attr_dev(div1, "id", "target");
-    			add_location(div1, file, 45, 0, 2248);
-    			add_location(ul, file, 59, 0, 2767);
+    			attr_dev(h1, "class", "svelte-bn10x2");
+    			add_location(h1, file, 43, 2, 1354);
+    			attr_dev(button, "class", "svelte-bn10x2");
+    			add_location(button, file, 47, 2, 1453);
+    			add_location(p, file, 48, 2, 1514);
+    			add_location(ul, file, 51, 2, 1692);
+    			attr_dev(div, "class", "container svelte-bn10x2");
+    			attr_dev(div, "id", "target");
+    			add_location(div, file, 42, 0, 1316);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div1, anchor);
-    			append_dev(div1, h1);
+    			insert_dev(target, div, anchor);
+    			append_dev(div, h1);
     			append_dev(h1, t0);
     			append_dev(h1, t1);
     			append_dev(h1, t2);
     			append_dev(h1, t3);
     			append_dev(h1, t4);
-    			append_dev(div1, t5);
-    			append_dev(div1, button0);
-    			append_dev(div1, t8);
-    			append_dev(div1, div0);
-    			append_dev(div1, t9);
-    			mount_component(test_1, div1, null);
-    			append_dev(div1, t10);
-    			append_dev(div1, p);
-    			append_dev(div1, t12);
-    			append_dev(div1, span);
-    			append_dev(span, t13);
-    			append_dev(div1, t14);
-    			append_dev(div1, button1);
-    			insert_dev(target, t16, anchor);
-    			insert_dev(target, ul, anchor);
+    			append_dev(div, t5);
+    			append_dev(div, button);
+    			append_dev(div, t8);
+    			append_dev(div, p);
+    			append_dev(div, t10);
+    			append_dev(div, ul);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(ul, null);
     			}
 
-    			current = true;
-
     			if (!mounted) {
-    				dispose = [
-    					listen_dev(button0, "click", /*timeTravel*/ ctx[6], false, false, false),
-    					listen_dev(button1, "click", /*click_handler*/ ctx[8], false, false, false)
-    				];
-
+    				dispose = listen_dev(button, "click", /*timeTravel*/ ctx[4], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if ((!current || dirty & /*mph*/ 2) && t0_value !== (t0_value = (/*mph*/ ctx[1] < 88 ? "Cruising at" : "Approaching") + "")) set_data_dev(t0, t0_value);
-    			if (!current || dirty & /*mph*/ 2) set_data_dev(t2, /*mph*/ ctx[1]);
-    			if (!current || dirty & /*excitement*/ 4) set_data_dev(t4, /*excitement*/ ctx[2]);
+    			if (dirty & /*mph*/ 1 && t0_value !== (t0_value = (/*mph*/ ctx[0] < 88 ? "Cruising at" : "Approaching") + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*mph*/ 1) set_data_dev(t2, /*mph*/ ctx[0]);
+    			if (dirty & /*excitement*/ 2) set_data_dev(t4, /*excitement*/ ctx[1]);
 
-    			if ((!current || dirty & /*notUntil5Counter*/ 8) && t13_value !== (t13_value = (/*notUntil5Counter*/ ctx[3] < 5
-    			? ""
-    			: /*notUntil5Counter*/ ctx[3]) + "")) set_data_dev(t13, t13_value);
-
-    			if (!current || dirty & /*class1*/ 1 && div1_class_value !== (div1_class_value = "" + (null_to_empty(/*class1*/ ctx[0]) + " svelte-1s9ebut"))) {
-    				attr_dev(div1, "class", div1_class_value);
-    			}
-
-    			if (dirty & /*things*/ 16) {
-    				each_value = /*things*/ ctx[4];
+    			if (dirty & /*things*/ 4) {
+    				each_value = /*things*/ ctx[2];
     				validate_each_argument(each_value);
     				let i;
 
@@ -722,23 +645,13 @@ var app = (function () {
     				each_blocks.length = each_value.length;
     			}
     		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(test_1.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(test_1.$$.fragment, local);
-    			current = false;
-    		},
+    		i: noop,
+    		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div1);
-    			destroy_component(test_1);
-    			if (detaching) detach_dev(t16);
-    			if (detaching) detach_dev(ul);
+    			if (detaching) detach_dev(div);
     			destroy_each(each_blocks, detaching);
     			mounted = false;
-    			run_all(dispose);
+    			dispose();
     		}
     	};
 
@@ -753,11 +666,6 @@ var app = (function () {
     	return block;
     }
 
-    function log() {
-    	
-    } // window.document.addEventListener('SvelteRegisterBlock', e => svelteVersion = e.detail.version, { once: true })
-    // window.document.addEventListener('SvelteRegisterComponent', (e) => console.log('SvelteRegisterComponent', e.detail))
-
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
@@ -766,30 +674,59 @@ var app = (function () {
     	let excitement = "";
     	let notUntil5Counter = 0;
     	let test = "test";
-    	let changeGreet = "hi aram";
 
-    	// $: speedBanner = `${mph} `.repeat(mph);
     	function timeTravel() {
     		addChild();
 
-    		if (mph * 1.1 < 88) $$invalidate(1, mph = Math.floor(mph * 1.1)); else {
-    			$$invalidate(1, mph = 88);
-    			$$invalidate(2, excitement += "!");
+    		if (mph * 1.1 < 88) $$invalidate(0, mph = Math.floor(mph * 1.1)); else {
+    			$$invalidate(0, mph = 88);
+    			$$invalidate(1, excitement += "!");
     		}
     	}
 
-    	let parent = "parent";
-    	let things = ["toy"];
+    	// let parent: string = "parent";
+    	// let things = ["toy", "ice cream", "skate board"];
+    	// function addChild() {
+    	//   things = [...things, "another thing"];
+    	// }
+    	// GOAL: MAKE THIS WORK SO THAT NO SYNONYM IS REPEATED AND 'OUT OF IDEAS' PRINTS AFTER THEY'VE ALL BEEN USED
+    	const synonyms = [
+    		'pain',
+    		'agony',
+    		'suffering',
+    		'difficulty',
+    		'regret',
+    		'torture',
+    		'torment',
+    		'never-ending',
+    		'sorrow',
+    		'aching',
+    		'confusion',
+    		'why',
+    		'too late'
+    	];
+
+    	let things = ["toy", "ice cream", "skate board"];
+    	let newThing;
+
+    	// let seen = [];
+    	const seen = [];
 
     	function addChild() {
-    		// const child = document.createElement('button');
-    		// parent.appendChild(child);
-    		$$invalidate(4, things = [...things, "another thing"]);
+    		if (seen.length < synonyms.length - 1) {
+    			newThing = synonyms[Math.floor(Math.random() * (synonyms.length - 1))];
 
-    		document.getElementById("target");
+    			while (seen.includes(newThing)) {
+    				newThing = synonyms[Math.floor(Math.random() * (synonyms.length - 1))];
+    			}
 
-    		// target.setAttribute('class', 'test')
-    		$$invalidate(0, class1 = "testclass");
+    			// seen = [...seen, newThing];
+    			seen.push(newThing);
+    		} else {
+    			newThing = 'out of ideas :(';
+    		}
+
+    		$$invalidate(2, things = [...things, newThing]);
     	}
 
     	const writable_props = [];
@@ -798,8 +735,6 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
-    	const click_handler = () => $$invalidate(3, notUntil5Counter += 1);
-
     	$$self.$capture_state = () => ({
     		Test,
     		class1,
@@ -807,40 +742,29 @@ var app = (function () {
     		excitement,
     		notUntil5Counter,
     		test,
-    		changeGreet,
     		timeTravel,
-    		parent,
+    		synonyms,
     		things,
-    		addChild,
-    		log
+    		newThing,
+    		seen,
+    		addChild
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('class1' in $$props) $$invalidate(0, class1 = $$props.class1);
-    		if ('mph' in $$props) $$invalidate(1, mph = $$props.mph);
-    		if ('excitement' in $$props) $$invalidate(2, excitement = $$props.excitement);
-    		if ('notUntil5Counter' in $$props) $$invalidate(3, notUntil5Counter = $$props.notUntil5Counter);
-    		if ('test' in $$props) $$invalidate(5, test = $$props.test);
-    		if ('changeGreet' in $$props) changeGreet = $$props.changeGreet;
-    		if ('parent' in $$props) $$invalidate(7, parent = $$props.parent);
-    		if ('things' in $$props) $$invalidate(4, things = $$props.things);
+    		if ('class1' in $$props) class1 = $$props.class1;
+    		if ('mph' in $$props) $$invalidate(0, mph = $$props.mph);
+    		if ('excitement' in $$props) $$invalidate(1, excitement = $$props.excitement);
+    		if ('notUntil5Counter' in $$props) notUntil5Counter = $$props.notUntil5Counter;
+    		if ('test' in $$props) $$invalidate(3, test = $$props.test);
+    		if ('things' in $$props) $$invalidate(2, things = $$props.things);
+    		if ('newThing' in $$props) newThing = $$props.newThing;
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [
-    		class1,
-    		mph,
-    		excitement,
-    		notUntil5Counter,
-    		things,
-    		test,
-    		timeTravel,
-    		parent,
-    		click_handler
-    	];
+    	return [mph, excitement, things, test, timeTravel];
     }
 
     class App extends SvelteComponentDev {
