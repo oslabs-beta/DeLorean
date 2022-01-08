@@ -3,105 +3,14 @@
   // we need to update our state by adding new elements into the existing array
   import State from "./State.svelte";
   export let snapshot = [];
-  let compState = [];
-  let activeIndex = -1;
-
-  function handleShowState(i) {
-    activeIndex = i;
-    let index = 0;
-    if (!document.getElementById("state")) {
-      let state = document.createElement("ul");
-      state.id = "state";
-      state.innerHTML = `State ${i + 1}`;
-      state.style.fontFamily = "monospace";
-      state.style.fontSize = "12px";
-      state.style.fontWeight = "bold";
-      compState = snapshot[i];
-      for (const el of snapshot[i]) {
-        if (el) {
-          if (Array.isArray(el)) {
-            let arrayLI = document.createElement("li");
-            arrayLI.innerText = "Array: ";
-            arrayLI.style.fontWeight = "normal";
-            let newUl = document.createElement("ul");
-            newUl.style.listStyleType = "circle";
-            for (const data of el) {
-              let elData = document.createElement("li");
-              elData.innerText = data;
-              elData.style.fontFamily = "monospace";
-              elData.style.fontSize = "12px";
-              elData.style.fontFamily = "12px";
-              newUl.appendChild(elData);
-            }
-            arrayLI.appendChild(newUl);
-            state.appendChild(arrayLI);
-          } else {
-            if (index === snapshot[i].length - 1) {
-              let component = document.createElement("li");
-              component.innerText = `Most recent change to state: ${el}`;
-              component.style.fontWeight = "normal";
-              state.appendChild(component);
-            } else {
-              let component = document.createElement("li");
-              component.innerText = el;
-              component.style.fontWeight = "normal";
-              state.appendChild(component);
-            }
-          }
-        }
-        index++;
-      }
-      document.getElementById("main-page").appendChild(state);
-    } else {
-      while (state.firstChild) {
-        state.removeChild(state.firstChild);
-      }
-      state.innerHTML = `State ${i + 1}`;
-      state.style.fontFamily = "monospace";
-      state.style.fontSize = "12px";
-      for (const el of snapshot[i]) {
-        if (el) {
-          if (Array.isArray(el)) {
-            let arrayLI = document.createElement("li");
-            arrayLI.innerText = "Array: ";
-            arrayLI.style.fontWeight = "normal";
-            let newUl = document.createElement("ul");
-            newUl.style.listStyleType = "circle";
-            for (const data of el) {
-              let elData = document.createElement("li");
-              elData.innerText = data;
-              elData.style.fontFamily = "monospace";
-              elData.style.fontSize = "12px";
-              elData.style.fontWeight = "normal";
-              newUl.appendChild(elData);
-            }
-            arrayLI.appendChild(newUl);
-            state.appendChild(arrayLI);
-          } else {
-            if (index === snapshot[i].length - 1) {
-              let component = document.createElement("li");
-              component.innerText = `Most recent change to state: ${el}`;
-              component.style.fontWeight = "normal";
-              state.appendChild(component);
-            } else {
-              let component = document.createElement("li");
-              component.innerText = el;
-              component.style.fontWeight = "normal";
-              state.appendChild(component);
-            }
-          }
-        }
-        index++;
-      }
-    }
-  }
+  let activeIndex = 0;
+  $: compState = snapshot[activeIndex];
 
   const connectButton = window.document.getElementById("connectButton");
   connectButton.addEventListener("click", () => {
     // sending message from chrome devtool extension to background.js to signify open port connection between two files
     chrome.runtime.sendMessage({ body: "runContentScript" }, (response) => {
-      chrome.runtime.sendMessage({ body: "openPort" }, (response) => {
-      });
+      chrome.runtime.sendMessage({ body: "openPort" }, (response) => {});
     });
 
     const mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.j
@@ -123,18 +32,19 @@
         <button
           class="stateButton {activeIndex === i ? 'active' : ''}"
           id="button{i}"
-          on:click={() => handleShowState(i)}>State {i + 1}</button
+          on:click={() => activeIndex = i}>State {i + 1}</button
         >
       </span><br />
     {/each}
   </div>
+  <State {compState}></State>
 </div>
 
 <style>
   #main-page {
     display: flex;
   }
-
+  
   .buttons {
     display: flex;
     flex-direction: column;
@@ -164,3 +74,5 @@
     transform: translateY(2px);
   }
 </style>
+
+
