@@ -14,7 +14,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   );
   if (request.body === 'runContentScript') {
     sendResponse({ body: 'trying to run the content script' });
-    chrome.tabs.executeScript({ file: './output/bundledContentScript.js' });
+    chrome.tabs.executeScript({ file: './contentScript.js' });
   }
   // pass any received message along to main.js
   if (request) {
