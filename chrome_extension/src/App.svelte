@@ -7,13 +7,14 @@
   $: compState = snapshot[activeIndex];
 
   const connectButton = window.document.getElementById("connectButton");
+  let mainToBgPort;
   connectButton.addEventListener("click", () => {
     // sending message from chrome devtool extension to background.js to signify open port connection between two files
     chrome.runtime.sendMessage({ body: "runContentScript" }, (response) => {
-      chrome.runtime.sendMessage({ body: "openPort" }, (response) => {});
+      // chrome.runtime.sendMessage({ body: "openPort" }, (response) => {});
     });
 
-    const mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.j
+    mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.j
     mainToBgPort.onMessage.addListener((msg, port) => {
       if (msg.body.ctx) {
         snapshot.push(msg.body.ctx);
@@ -22,6 +23,30 @@
     });
     mainToBgPort.postMessage({ body: "testing port from main to bg" });
     connectButton.style.visibility = "hidden";
+  });
+
+  // experimental update of script
+  const secondButton = window.document.getElementById("secondButton");
+  secondButton.addEventListener("click", () => {
+    mainToBgPort.postMessage({ body: "updateScript", script: bundleResource });
+  })
+  
+  let bundleResource;
+  chrome.devtools.inspectedWindow.getResources((resources) => {
+    console.log(resources);
+    resources[6].getContent((content, encoding) => {
+      bundleResource = content;
+      // const pTag =
+
+      // const p = document.createElement('p');
+      // p.innerHTML = ${content};
+      // window.document.body.appendChild(p);
+      // window.location.reload();
+      // console.log(p);
+
+      // [4].setContent(("", true));
+      // console.log(content);
+    });
   });
 </script>
 
@@ -32,19 +57,19 @@
         <button
           class="stateButton {activeIndex === i ? 'active' : ''}"
           id="button{i}"
-          on:click={() => activeIndex = i}>State {i + 1}</button
+          on:click={() => (activeIndex = i)}>State {i + 1}</button
         >
       </span><br />
     {/each}
   </div>
-  <State {compState}></State>
+  <State {compState} />
 </div>
 
 <style>
   #main-page {
     display: flex;
   }
-  
+
   .buttons {
     display: flex;
     flex-direction: column;
@@ -74,5 +99,3 @@
     transform: translateY(2px);
   }
 </style>
-
-
