@@ -53,8 +53,26 @@ for (let i = 0; i < window.frames.length; i++) {
     "message",
     (messageEvent) => {
       console.log(messageEvent);
-      messageEvent.source == window && chrome.runtime.sendMessage(messageEvent.data);
+      messageEvent.source == window &&
+        chrome.runtime.sendMessage(messageEvent.data);
     },
     false
   );
 }
+
+// testing update script feature
+chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
+  console.log("reached content script from dev tools");
+  if (req.body === "UPDATE") {
+    // document.children[0].removeChild(window.tag);
+    window.tag2 = document.createElement("script");
+    window.tag2.text = `(function () { 
+    'use strict'; 
+    ${req.script};
+    })();
+    console.log('testing');
+    `;
+    document.children[0].append(window.tag2);
+    // sendResponse({body: 'executeScriptAgain'});
+  }
+});
