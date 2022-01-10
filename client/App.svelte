@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Test from "./Test.svelte";
   let class1 = "container";
   let mph: number = 30;
   let excitement: string = "";
