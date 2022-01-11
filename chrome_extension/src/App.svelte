@@ -15,8 +15,8 @@
     });
 
     mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.j
-    mainToBgPort.onMessage.addListener((msg, port) => {
-      if (msg.body.ctx) {
+    mainToBgPort.onMessage.addListener((msg, sender, sendResponse) => {
+      if (msg.body.ctx) {  // probably from SvelteRegisterBlock
         snapshot.push(msg.body.ctx);
         snapshot = snapshot;
       }
@@ -29,23 +29,18 @@
   const secondButton = window.document.getElementById("secondButton");
   secondButton.addEventListener("click", () => {
     mainToBgPort.postMessage({ body: "updateScript", script: bundleResource });
+    secondButton.style.visibility = "hidden";
   })
+  // experimental time travel to reset to stx at index i
+  const sendCtxIndex = (i) => {
+    mainToBgPort.postMessage({ body: "updateCtx", ctxIndex: i });
+  }
   
   let bundleResource;
   chrome.devtools.inspectedWindow.getResources((resources) => {
     console.log(resources);
     resources[6].getContent((content, encoding) => {
       bundleResource = content;
-      // const pTag =
-
-      // const p = document.createElement('p');
-      // p.innerHTML = ${content};
-      // window.document.body.appendChild(p);
-      // window.location.reload();
-      // console.log(p);
-
-      // [4].setContent(("", true));
-      // console.log(content);
     });
   });
 </script>
@@ -57,7 +52,7 @@
         <button
           class="stateButton {activeIndex === i ? 'active' : ''}"
           id="button{i}"
-          on:click={() => (activeIndex = i)}>State {i + 1}</button
+          on:click={() => { sendCtxIndex(i); activeIndex = i} }>State {i + 1}</button
         >
       </span><br />
     {/each}
