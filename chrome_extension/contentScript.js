@@ -74,17 +74,17 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
       });
     }
     ${req.script};
-    const ttButton = document.createElement('button');
-    ttButton.innerText = 'TIME TRAVELLLLLL!!!!!';
-    ttButton.addEventListener('click', () => {
-      app.$$.fragment.p(cacheState[0], [-1])
-    })
-    window.document.body.append(ttButton);
+    // const ttButton = document.createElement('button');
+    // ttButton.innerText = 'TIME TRAVELLLLLL!!!!!';
+    // ttButton.addEventListener('click', () => {
+    //   app.$$.fragment.p(cacheState[0], [-1])
+    // })
+    // window.document.body.append(ttButton);
     window.addEventListener(
       "message",
       (messageEvent) => {
         // console.log('received in injected script ', messageEvent);
-        if (messageEvent.body === 'TIME_TRAVEL') {
+        if (messageEvent.data.body === 'TIME_TRAVEL') {
           console.log('time travel attempt');
           const i = messageEvent.data.ctxIndex;
           app.$$.fragment.p(cacheState[i], [-1])
