@@ -6,18 +6,24 @@ if (!messageListeners) {
   window.addEventListener(
     "message",
     (messageEvent) => {
-      console.log(messageEvent);
       messageEvent.source == window &&
         chrome.runtime.sendMessage(messageEvent.data);
+      // if (messageEvent.data.body === "TIME_TRAVEL") {
+      //   console.log('trying to time travel from content script!');
+      // }
     },
     false
   );
   messageListeners = true;
 }
-
+let index;
 // testing update script feature
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
-  console.log("reached content script from dev tools");
+  // console.log("reached content script from dev tools");
+  if(req.body === "TIME_TRAVEL") {
+    const i = req.ctxIndex;
+    window.postMessage({body: "TIME_TRAVEL", ctxIndex: i})
+  }
   if (req.body === "UPDATE") {
     // document.children[0].removeChild(window.tag);
     window.tag2 = document.createElement("script");
@@ -29,15 +35,19 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
       'use strict';
       const sendMessages = (eventDetail) => {
         window.postMessage({ body: eventDetail });
-        console.log(eventDetail);
+        // console.log(eventDetail);
       };
       const parseEvent = (event) => JSON.parse(JSON.stringify(event));
       const cacheState = [];
+      let app;
     function setupListeners(root) {
-      root.addEventListener('SvelteRegisterComponent', (e) => sendMessages(parseEvent(e.detail)));
+      root.addEventListener('SvelteRegisterComponent', (e) => {
+        sendMessages(parseEvent(e.detail));
+        app = e.detail.component;
+      });
       root.addEventListener('SvelteRegisterBlock', (e) => {
         cacheState.push(e.detail.ctx);
-        console.log('this is cacheState: ', cacheState);
+        // console.log('this is cacheState: ', cacheState);
         sendMessages(parseEvent(e.detail))
       });
       root.addEventListener('SvelteDOMInsert', (e) => sendMessages(parseEvent(e.detail)));
@@ -64,12 +74,28 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
       });
     }
     ${req.script};
+    const ttButton = document.createElement('button');
+    ttButton.innerText = 'TIME TRAVELLLLLL!!!!!';
+    ttButton.addEventListener('click', () => {
+      app.$$.fragment.p(cacheState[0], [-1])
+    })
+    window.document.body.append(ttButton);
+    window.addEventListener(
+      "message",
+      (messageEvent) => {
+        // console.log('received in injected script ', messageEvent);
+        if (messageEvent.body === 'TIME_TRAVEL') {
+          console.log('time travel attempt');
+          const i = messageEvent.data.ctxIndex;
+          app.$$.fragment.p(cacheState[i], [-1])
+        }
+      },
+      false
+    );
     })();
-    console.log('testing');
     `;
     document.children[0].append(window.tag2);
-    // sendResponse({body: 'executeScriptAgain'});
   }
 });
 
-// App.$$.fragment.p([ctx], [dirtynum])
+// App.$$.fragment.p(cacheState[i], [-1])
