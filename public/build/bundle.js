@@ -1,6 +1,6 @@
 
-(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35733/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
-var demoApp = (function () {
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35730/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+(function () {
     'use strict';
 
     function noop() { }
@@ -661,11 +661,9 @@ var demoApp = (function () {
     	}
     }
 
-    const app = new App({
+    new App({
         target: document.getElementById('root'),
     });
-
-    return app;
 
 })();
 //# sourceMappingURL=bundle.js.map

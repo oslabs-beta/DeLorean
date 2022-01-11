@@ -43,6 +43,17 @@ chrome.runtime.onConnect.addListener((port) => {
         });
       });
     }
+    if (msg.body === "updateCtx") {
+      console.log(
+        "we got the message with ctxIndex and now we're sending a message to the content script"
+      );
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.sendMessage(tabs[0].id, {
+          body: "TIME_TRAVEL",
+          ctxIndex: msg.ctxIndex,
+        });
+      });
+    }
   });
   mainPort.postMessage({ body: "some content" });
 });
