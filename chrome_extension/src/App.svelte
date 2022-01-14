@@ -16,7 +16,7 @@
 
     mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.j
     mainToBgPort.onMessage.addListener((msg, sender, sendResponse) => {
-      if (msg.body.ctx) {  // probably from SvelteRegisterBlock
+      if (!snapshot.includes(msg.body.ctx)) {
         snapshot.push(msg.body.ctx);
         snapshot = snapshot;
       }
@@ -38,12 +38,17 @@
   
   let bundleResource;
   chrome.devtools.inspectedWindow.getResources((resources) => {
-    console.log(resources);
-    resources[6].getContent((content, encoding) => {
-      bundleResource = content;
-    });
-  });
-</script>
+    // search for bundle file
+    //   possibly first thing in array with type = script ??
+    for (let i = 0; i < resources.length; i++) {
+      if (resources[i].type === 'script') {
+        resources[i].getContent((content, encoding) => {
+          bundleResource = content;
+        });
+        break;
+      }
+  }});
+  </script>
 
 <div id="main-page">
   <div class="buttons">
