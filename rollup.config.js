@@ -94,7 +94,7 @@ export default [
     },
     plugins: [
       svelte({
-        preprocess: sveltePreprocess({ sourceMap: true }),
+        preprocess: sveltePreprocess({ sourceMap: !production }),
         compilerOptions: {
           // enable run-time checks when not in production
           dev: !production,
