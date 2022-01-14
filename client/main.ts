@@ -1,5 +1,5 @@
-import App from './App.svelte';
+import ClientApp from './ClientApp.svelte';
 
-new App({
+new ClientApp({
   target: document.getElementById('root'),
 });
