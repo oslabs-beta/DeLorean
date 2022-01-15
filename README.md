@@ -1,4 +1,5 @@
 ![](assets/logo.png)
+![DeLorean devtool demo](assets/demo.gif)
 
 # DeLorean
 The first time-travelling debugger for Svelte applciations
