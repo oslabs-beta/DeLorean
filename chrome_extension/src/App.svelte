@@ -26,7 +26,6 @@
   // injects logic into inspected webpage's DOM
   function updateScript(){
     mainToBgPort.postMessage({ body: "updateScript", script: bundleResource });
-    secondButton.style.visibility = "hidden";
   }
   
   // handles click and invokes connect() then updateScript()

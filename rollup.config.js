@@ -39,14 +39,14 @@ export default [
     input: "./chrome_extension/src/index.js",
     external: "chrome",
     output: {
-      sourcemap: true,
+      sourcemap: false,
       format: "iife",
       name: "app",
       file: "./chrome_extension/build/bundleDelorean.js",
     },
     plugins: [
       svelte({
-        preprocess: sveltePreprocess({ sourceMap: true }),
+        preprocess: sveltePreprocess({ sourceMap: false }),
         compilerOptions: {
           // enable run-time checks when not in production
           dev: !production,
@@ -67,7 +67,7 @@ export default [
       }),
       commonjs(),
       typescript({
-        sourceMap: true,
+        sourceMap: false,
         inlineSources: !production,
       }),
 
@@ -87,7 +87,7 @@ export default [
     input: "./client/main.ts",
     external: "chrome",
     output: {
-      sourcemap: true,
+      sourcemap: false,
       format: "iife",
       name: "demoApp",
       file: "./public/build/bundle.js",
@@ -115,7 +115,7 @@ export default [
       }),
       commonjs(),
       typescript({
-        sourceMap: true,
+        sourceMap: false,
         inlineSources: !production,
       }),
 

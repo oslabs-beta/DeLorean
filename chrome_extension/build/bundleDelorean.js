@@ -831,7 +831,7 @@
     	return child_ctx;
     }
 
-    // (60:4) {#each snapshot as instance, i}
+    // (59:4) {#each snapshot as instance, i}
     function create_each_block(ctx) {
     	let span;
     	let button;
@@ -858,9 +858,9 @@
     			br = element("br");
     			attr_dev(button, "class", button_class_value = "stateButton " + (/*activeIndex*/ ctx[1] === /*i*/ ctx[12] ? 'active' : '') + " svelte-uwtdfx");
     			attr_dev(button, "id", "button" + /*i*/ ctx[12]);
-    			add_location(button, file, 61, 8, 1878);
-    			add_location(span, file, 60, 6, 1863);
-    			add_location(br, file, 66, 13, 2086);
+    			add_location(button, file, 60, 8, 1832);
+    			add_location(span, file, 59, 6, 1817);
+    			add_location(br, file, 65, 13, 2040);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -894,7 +894,7 @@
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(60:4) {#each snapshot as instance, i}",
+    		source: "(59:4) {#each snapshot as instance, i}",
     		ctx
     	});
 
@@ -944,14 +944,14 @@
     			create_component(state.$$.fragment);
     			attr_dev(button, "id", "connectButton");
     			attr_dev(button, "class", "svelte-uwtdfx");
-    			add_location(button, file, 54, 4, 1692);
-    			add_location(span, file, 53, 2, 1681);
-    			add_location(div0, file, 52, 0, 1673);
+    			add_location(button, file, 53, 4, 1646);
+    			add_location(span, file, 52, 2, 1635);
+    			add_location(div0, file, 51, 0, 1627);
     			attr_dev(div1, "class", "buttons svelte-uwtdfx");
-    			add_location(div1, file, 58, 2, 1799);
+    			add_location(div1, file, 57, 2, 1753);
     			attr_dev(div2, "id", "main-page");
     			attr_dev(div2, "class", "svelte-uwtdfx");
-    			add_location(div2, file, 57, 0, 1776);
+    			add_location(div2, file, 56, 0, 1730);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1069,8 +1069,6 @@
     			body: "updateScript",
     			script: bundleResource
     		});
-
-    		secondButton.style.visibility = "hidden";
     	}
 
     	// handles click and invokes connect() then updateScript()
@@ -1173,4 +1171,3 @@
     });
 
 })();
-//# sourceMappingURL=bundleDelorean.js.map
