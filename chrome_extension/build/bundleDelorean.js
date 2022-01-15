@@ -831,7 +831,7 @@
     	return child_ctx;
     }
 
-    // (55:4) {#each snapshot as instance, i}
+    // (60:4) {#each snapshot as instance, i}
     function create_each_block(ctx) {
     	let span;
     	let button;
@@ -845,7 +845,7 @@
     	let dispose;
 
     	function click_handler() {
-    		return /*click_handler*/ ctx[4](/*i*/ ctx[11]);
+    		return /*click_handler*/ ctx[6](/*i*/ ctx[11]);
     	}
 
     	const block = {
@@ -856,11 +856,11 @@
     			t1 = text(t1_value);
     			t2 = space();
     			br = element("br");
-    			attr_dev(button, "class", button_class_value = "stateButton " + (/*activeIndex*/ ctx[1] === /*i*/ ctx[11] ? 'active' : '') + " svelte-8d6u7j");
+    			attr_dev(button, "class", button_class_value = "stateButton " + (/*activeIndex*/ ctx[1] === /*i*/ ctx[11] ? 'active' : '') + " svelte-1m2ie67");
     			attr_dev(button, "id", "button" + /*i*/ ctx[11]);
-    			add_location(button, file, 56, 8, 2098);
-    			add_location(span, file, 55, 6, 2083);
-    			add_location(br, file, 61, 13, 2306);
+    			add_location(button, file, 61, 8, 1950);
+    			add_location(span, file, 60, 6, 1935);
+    			add_location(br, file, 66, 13, 2158);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -878,7 +878,7 @@
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*activeIndex*/ 2 && button_class_value !== (button_class_value = "stateButton " + (/*activeIndex*/ ctx[1] === /*i*/ ctx[11] ? 'active' : '') + " svelte-8d6u7j")) {
+    			if (dirty & /*activeIndex*/ 2 && button_class_value !== (button_class_value = "stateButton " + (/*activeIndex*/ ctx[1] === /*i*/ ctx[11] ? 'active' : '') + " svelte-1m2ie67")) {
     				attr_dev(button, "class", button_class_value);
     			}
     		},
@@ -894,7 +894,7 @@
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(55:4) {#each snapshot as instance, i}",
+    		source: "(60:4) {#each snapshot as instance, i}",
     		ctx
     	});
 
@@ -902,11 +902,19 @@
     }
 
     function create_fragment(ctx) {
-    	let div1;
     	let div0;
-    	let t;
+    	let span;
+    	let button0;
+    	let t1;
+    	let button1;
+    	let t3;
+    	let div2;
+    	let div1;
+    	let t4;
     	let state;
     	let current;
+    	let mounted;
+    	let dispose;
     	let each_value = /*snapshot*/ ctx[0];
     	validate_each_argument(each_value);
     	let each_blocks = [];
@@ -922,38 +930,69 @@
 
     	const block = {
     		c: function create() {
-    			div1 = element("div");
     			div0 = element("div");
+    			span = element("span");
+    			button0 = element("button");
+    			button0.textContent = "Connect";
+    			t1 = space();
+    			button1 = element("button");
+    			button1.textContent = "Click me second";
+    			t3 = space();
+    			div2 = element("div");
+    			div1 = element("div");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t = space();
+    			t4 = space();
     			create_component(state.$$.fragment);
-    			attr_dev(div0, "class", "buttons svelte-8d6u7j");
-    			add_location(div0, file, 53, 2, 2019);
-    			attr_dev(div1, "id", "main-page");
-    			attr_dev(div1, "class", "svelte-8d6u7j");
-    			add_location(div1, file, 52, 0, 1996);
+    			attr_dev(button0, "id", "connectButton");
+    			attr_dev(button0, "class", "svelte-1m2ie67");
+    			add_location(button0, file, 53, 4, 1684);
+    			attr_dev(button1, "id", "secondButton");
+    			attr_dev(button1, "class", "svelte-1m2ie67");
+    			add_location(button1, file, 54, 4, 1751);
+    			add_location(span, file, 52, 2, 1673);
+    			add_location(div0, file, 51, 0, 1665);
+    			attr_dev(div1, "class", "buttons svelte-1m2ie67");
+    			add_location(div1, file, 58, 2, 1871);
+    			attr_dev(div2, "id", "main-page");
+    			attr_dev(div2, "class", "svelte-1m2ie67");
+    			add_location(div2, file, 57, 0, 1848);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div1, anchor);
-    			append_dev(div1, div0);
+    			insert_dev(target, div0, anchor);
+    			append_dev(div0, span);
+    			append_dev(span, button0);
+    			append_dev(span, t1);
+    			append_dev(span, button1);
+    			insert_dev(target, t3, anchor);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, div1);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div0, null);
+    				each_blocks[i].m(div1, null);
     			}
 
-    			append_dev(div1, t);
-    			mount_component(state, div1, null);
+    			append_dev(div2, t4);
+    			mount_component(state, div2, null);
     			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(button0, "click", /*connect*/ ctx[3], false, false, false),
+    					listen_dev(button1, "click", /*secondButtonClick*/ ctx[4], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*activeIndex, sendCtxIndex, snapshot*/ 11) {
+    			if (dirty & /*activeIndex, sendCtxIndex, snapshot*/ 35) {
     				each_value = /*snapshot*/ ctx[0];
     				validate_each_argument(each_value);
     				let i;
@@ -966,7 +1005,7 @@
     					} else {
     						each_blocks[i] = create_each_block(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(div0, null);
+    						each_blocks[i].m(div1, null);
     					}
     				}
 
@@ -991,9 +1030,13 @@
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(div0);
+    			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(div2);
     			destroy_each(each_blocks, detaching);
     			destroy_component(state);
+    			mounted = false;
+    			run_all(dispose);
     		}
     	};
 
@@ -1014,11 +1057,10 @@
     	validate_slots('App', slots, []);
     	let { snapshot = [] } = $$props;
     	let activeIndex = 0;
-    	const connectButton = window.document.getElementById("connectButton");
     	let mainToBgPort;
 
-    	connectButton.addEventListener("click", () => {
-    		// sending message from chrome devtool extension to background.js to signify open port connection between two files
+    	//handle click for connect button
+    	function connect() {
     		chrome.runtime.sendMessage({ body: "runContentScript" }, response => {
     			
     		}); // chrome.runtime.sendMessage({ body: "openPort" }, (response) => {});
@@ -1034,21 +1076,18 @@
 
     		mainToBgPort.postMessage({ body: "testing port from main to bg" });
     		connectButton.style.visibility = "hidden";
-    	});
+    	}
 
-    	// experimental update of script
-    	const secondButton = window.document.getElementById("secondButton");
-
-    	secondButton.addEventListener("click", () => {
+    	//handle click to second button
+    	function secondButtonClick() {
     		mainToBgPort.postMessage({
     			body: "updateScript",
     			script: bundleResource
     		});
 
     		secondButton.style.visibility = "hidden";
-    	});
+    	}
 
-    	// experimental time travel to reset to stx at index i
     	const sendCtxIndex = i => {
     		mainToBgPort.postMessage({ body: "updateCtx", ctxIndex: i });
     	};
@@ -1088,9 +1127,9 @@
     		State,
     		snapshot,
     		activeIndex,
-    		connectButton,
     		mainToBgPort,
-    		secondButton,
+    		connect,
+    		secondButtonClick,
     		sendCtxIndex,
     		bundleResource,
     		compState
@@ -1114,7 +1153,15 @@
     		}
     	};
 
-    	return [snapshot, activeIndex, compState, sendCtxIndex, click_handler];
+    	return [
+    		snapshot,
+    		activeIndex,
+    		compState,
+    		connect,
+    		secondButtonClick,
+    		sendCtxIndex,
+    		click_handler
+    	];
     }
 
     class App extends SvelteComponentDev {
