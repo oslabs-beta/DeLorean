@@ -57,9 +57,8 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
                 if (!blockEvent.detail.ctx.includes("DONOTPUSH")) {
                   curState.push([component, blockEvent.detail.ctx]);
                   cacheState.push(curState);
-                  console.log(blockEvent.detail.ctx);
                   // cacheState[cacheState.length - 1][0][0].$$.fragment.p([...cacheState[cacheState.length - 1][0][1], "DONOTPUSH"], [-1])
-                  sendMessages(parseEvent(blockEvent.detail));
+                  sendMessages(parseEvent({ctx : [...component.$$.ctx]}));
                 }
               })
             })
