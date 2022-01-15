@@ -51,24 +51,23 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
           counter++;
           if (counter >= 1) {
             root.addEventListener('SvelteRegisterBlock', (blockEvent) => {
-                  const curState = [];
+                const curState = [];
+
                   components.forEach((component) => {
                     if (!blockEvent.detail.ctx.includes("DONOTPUSH")) {
-                      sendMessages(parseEvent(blockEvent.detail));
                       curState.push([component, blockEvent.detail.ctx]);
                       cacheState.push(curState);
+                      console.log(blockEvent.detail.ctx);
+                      // small hack to fix problem of changing state when a state button on the devtool that isn't the most recent copy of state is active
+                      // made it so that state is updated to most recent copy of state before the next update of state is rendered on testing app
+                      // cacheState[cacheState.length - 1][0][0].$$.fragment.p([...cacheState[cacheState.length - 1][0][1], "DONOTPUSH"], [-1])
+                      sendMessages(parseEvent(blockEvent.detail));
                     }
                   })
             })
-              
-              
           }
-
         });
-
         
-    
-
         // root.addEventListener('SvelteDOMInsert', (e) => sendMessages(parseEvent(e.detail)));
         // root.addEventListener('SvelteDOMRemove', (e) => {
         //   console.log('%c this is the svelteDomRemove emitter being fired', "background: orange", e.detail);
@@ -108,7 +107,7 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
           const i = messageEvent.data.ctxIndex;
           if (cacheState[i]) {
             cacheState[i].forEach((componentState) => {
-              componentState[0].$$.fragment.p([...componentState[1], i, "DONOTPUSH"], [-1])
+              componentState[0].$$.fragment.p([...componentState[1], "DONOTPUSH"], [-1])
             })
           }
         }
@@ -120,5 +119,3 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
     document.children[0].append(window.tag);
   }
 });
-
-// App.$$.fragment.p(cacheState[i], [-1])
