@@ -19,12 +19,12 @@
   // let seen = [];
   const seen: string[] = [];
   function addChild() {
+    console.log("things", things);
     if (seen.length < synonyms.length - 1) {
       newThing = synonyms[Math.floor(Math.random() * (synonyms.length - 1))];
       while (seen.includes(newThing)) {
         newThing = synonyms[Math.floor(Math.random() * (synonyms.length - 1))]
       }
-  
       seen.push(newThing);
     } else {
       newThing = 'out of ideas :(';
