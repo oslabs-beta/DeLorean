@@ -9,37 +9,37 @@
 
   let mainToBgPort;
 
-  //handle click for connect button
+  // connect devtool to inspected webpage
   function connect() {
-    chrome.runtime.sendMessage({ body: "runContentScript" }, (response) => {
-      // chrome.runtime.sendMessage({ body: "openPort" }, (response) => {});
-    });
+    chrome.runtime.sendMessage({ body: "runContentScript" }, (response) => {});
 
-    mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.j
+    mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.js
     mainToBgPort.onMessage.addListener((msg, sender, sendResponse) => {
       if (!snapshot.includes(msg.body.ctx)) {
         snapshot.push(msg.body.ctx);
         snapshot = snapshot;
       }
     });
-    mainToBgPort.postMessage({ body: "testing port from main to bg" });
     connectButton.style.visibility = "hidden";
   }
 
-  //handle click to second button
-  function secondButtonClick(){
+  // injects logic into inspected webpage's DOM
+  function updateScript(){
     mainToBgPort.postMessage({ body: "updateScript", script: bundleResource });
     secondButton.style.visibility = "hidden";
   }
-
+  
+  // handles click and invokes connect() then updateScript()
+  function handleClick(){
+    Promise.resolve(connect()).then(updateScript());
+  }
   const sendCtxIndex = (i) => {
     mainToBgPort.postMessage({ body: "updateCtx", ctxIndex: i });
   }
   
   let bundleResource;
   chrome.devtools.inspectedWindow.getResources((resources) => {
-    // search for bundle file
-    //   possibly first thing in array with type = script ??
+    // search for bundle file, probably first thing in resources array with type 'script'
     for (let i = 0; i < resources.length; i++) {
       if (resources[i].type === 'script') {
         resources[i].getContent((content, encoding) => {
@@ -49,10 +49,10 @@
       }
   }});
   </script>
+
 <div>
   <span>
-    <button id="connectButton" on:click={connect}>Connect</button>
-    <button id="secondButton" on:click={secondButtonClick}>Click me second</button>
+    <button id="connectButton" on:click={handleClick}>Connect</button>
   </span>
 </div>
 <div id="main-page">
@@ -71,13 +71,13 @@
 </div>
 
 <style>
-  #connectButton, #secondButton{
+  #connectButton {
     background-color: white;
     border-radius: 5px;
     padding: 5px;
   }
 
-  #connectButton:hover, #secondButton:hover{
+  #connectButton:hover {
     background-color: rgb(230, 230, 230);
     transition-duration: .2s;
   }

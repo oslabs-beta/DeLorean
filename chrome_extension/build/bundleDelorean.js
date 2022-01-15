@@ -496,7 +496,7 @@
     	return block;
     }
 
-    // (13:8) {:else}
+    // (14:8) {:else}
     function create_else_block(ctx) {
     	let li;
     	let t_value = /*state*/ ctx[1] + "";
@@ -507,7 +507,7 @@
     			li = element("li");
     			t = text(t_value);
     			attr_dev(li, "class", "svelte-cn5akm");
-    			add_location(li, file$1, 13, 10, 258);
+    			add_location(li, file$1, 14, 10, 339);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
@@ -527,7 +527,7 @@
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(13:8) {:else}",
+    		source: "(14:8) {:else}",
     		ctx
     	});
 
@@ -550,7 +550,7 @@
     	const block = {
     		c: function create() {
     			li = element("li");
-    			t0 = text("Array: \n          ");
+    			t0 = text("Array: \n            \n          ");
     			create_component(state.$$.fragment);
     			t1 = space();
     			attr_dev(li, "class", "svelte-cn5akm");
@@ -826,8 +826,8 @@
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[9] = list[i];
-    	child_ctx[11] = i;
+    	child_ctx[10] = list[i];
+    	child_ctx[12] = i;
     	return child_ctx;
     }
 
@@ -836,7 +836,7 @@
     	let span;
     	let button;
     	let t0;
-    	let t1_value = /*i*/ ctx[11] + 1 + "";
+    	let t1_value = /*i*/ ctx[12] + 1 + "";
     	let t1;
     	let button_class_value;
     	let t2;
@@ -845,7 +845,7 @@
     	let dispose;
 
     	function click_handler() {
-    		return /*click_handler*/ ctx[6](/*i*/ ctx[11]);
+    		return /*click_handler*/ ctx[5](/*i*/ ctx[12]);
     	}
 
     	const block = {
@@ -856,11 +856,11 @@
     			t1 = text(t1_value);
     			t2 = space();
     			br = element("br");
-    			attr_dev(button, "class", button_class_value = "stateButton " + (/*activeIndex*/ ctx[1] === /*i*/ ctx[11] ? 'active' : '') + " svelte-1m2ie67");
-    			attr_dev(button, "id", "button" + /*i*/ ctx[11]);
-    			add_location(button, file, 61, 8, 1950);
-    			add_location(span, file, 60, 6, 1935);
-    			add_location(br, file, 66, 13, 2158);
+    			attr_dev(button, "class", button_class_value = "stateButton " + (/*activeIndex*/ ctx[1] === /*i*/ ctx[12] ? 'active' : '') + " svelte-uwtdfx");
+    			attr_dev(button, "id", "button" + /*i*/ ctx[12]);
+    			add_location(button, file, 61, 8, 1878);
+    			add_location(span, file, 60, 6, 1863);
+    			add_location(br, file, 66, 13, 2086);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -878,7 +878,7 @@
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*activeIndex*/ 2 && button_class_value !== (button_class_value = "stateButton " + (/*activeIndex*/ ctx[1] === /*i*/ ctx[11] ? 'active' : '') + " svelte-1m2ie67")) {
+    			if (dirty & /*activeIndex*/ 2 && button_class_value !== (button_class_value = "stateButton " + (/*activeIndex*/ ctx[1] === /*i*/ ctx[12] ? 'active' : '') + " svelte-uwtdfx")) {
     				attr_dev(button, "class", button_class_value);
     			}
     		},
@@ -904,13 +904,11 @@
     function create_fragment(ctx) {
     	let div0;
     	let span;
-    	let button0;
+    	let button;
     	let t1;
-    	let button1;
-    	let t3;
     	let div2;
     	let div1;
-    	let t4;
+    	let t2;
     	let state;
     	let current;
     	let mounted;
@@ -932,12 +930,9 @@
     		c: function create() {
     			div0 = element("div");
     			span = element("span");
-    			button0 = element("button");
-    			button0.textContent = "Connect";
+    			button = element("button");
+    			button.textContent = "Connect";
     			t1 = space();
-    			button1 = element("button");
-    			button1.textContent = "Click me second";
-    			t3 = space();
     			div2 = element("div");
     			div1 = element("div");
 
@@ -945,21 +940,18 @@
     				each_blocks[i].c();
     			}
 
-    			t4 = space();
+    			t2 = space();
     			create_component(state.$$.fragment);
-    			attr_dev(button0, "id", "connectButton");
-    			attr_dev(button0, "class", "svelte-1m2ie67");
-    			add_location(button0, file, 53, 4, 1684);
-    			attr_dev(button1, "id", "secondButton");
-    			attr_dev(button1, "class", "svelte-1m2ie67");
-    			add_location(button1, file, 54, 4, 1751);
-    			add_location(span, file, 52, 2, 1673);
-    			add_location(div0, file, 51, 0, 1665);
-    			attr_dev(div1, "class", "buttons svelte-1m2ie67");
-    			add_location(div1, file, 58, 2, 1871);
+    			attr_dev(button, "id", "connectButton");
+    			attr_dev(button, "class", "svelte-uwtdfx");
+    			add_location(button, file, 54, 4, 1692);
+    			add_location(span, file, 53, 2, 1681);
+    			add_location(div0, file, 52, 0, 1673);
+    			attr_dev(div1, "class", "buttons svelte-uwtdfx");
+    			add_location(div1, file, 58, 2, 1799);
     			attr_dev(div2, "id", "main-page");
-    			attr_dev(div2, "class", "svelte-1m2ie67");
-    			add_location(div2, file, 57, 0, 1848);
+    			attr_dev(div2, "class", "svelte-uwtdfx");
+    			add_location(div2, file, 57, 0, 1776);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -967,10 +959,8 @@
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
     			append_dev(div0, span);
-    			append_dev(span, button0);
-    			append_dev(span, t1);
-    			append_dev(span, button1);
-    			insert_dev(target, t3, anchor);
+    			append_dev(span, button);
+    			insert_dev(target, t1, anchor);
     			insert_dev(target, div2, anchor);
     			append_dev(div2, div1);
 
@@ -978,21 +968,17 @@
     				each_blocks[i].m(div1, null);
     			}
 
-    			append_dev(div2, t4);
+    			append_dev(div2, t2);
     			mount_component(state, div2, null);
     			current = true;
 
     			if (!mounted) {
-    				dispose = [
-    					listen_dev(button0, "click", /*connect*/ ctx[3], false, false, false),
-    					listen_dev(button1, "click", /*secondButtonClick*/ ctx[4], false, false, false)
-    				];
-
+    				dispose = listen_dev(button, "click", /*handleClick*/ ctx[3], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*activeIndex, sendCtxIndex, snapshot*/ 35) {
+    			if (dirty & /*activeIndex, sendCtxIndex, snapshot*/ 19) {
     				each_value = /*snapshot*/ ctx[0];
     				validate_each_argument(each_value);
     				let i;
@@ -1031,12 +1017,12 @@
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div0);
-    			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(div2);
     			destroy_each(each_blocks, detaching);
     			destroy_component(state);
     			mounted = false;
-    			run_all(dispose);
+    			dispose();
     		}
     	};
 
@@ -1059,13 +1045,13 @@
     	let activeIndex = 0;
     	let mainToBgPort;
 
-    	//handle click for connect button
+    	// connect devtool to inspected webpage
     	function connect() {
     		chrome.runtime.sendMessage({ body: "runContentScript" }, response => {
     			
-    		}); // chrome.runtime.sendMessage({ body: "openPort" }, (response) => {});
+    		});
 
-    		mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.j
+    		mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.js
 
     		mainToBgPort.onMessage.addListener((msg, sender, sendResponse) => {
     			if (!snapshot.includes(msg.body.ctx)) {
@@ -1074,18 +1060,22 @@
     			}
     		});
 
-    		mainToBgPort.postMessage({ body: "testing port from main to bg" });
     		connectButton.style.visibility = "hidden";
     	}
 
-    	//handle click to second button
-    	function secondButtonClick() {
+    	// injects logic into inspected webpage's DOM
+    	function updateScript() {
     		mainToBgPort.postMessage({
     			body: "updateScript",
     			script: bundleResource
     		});
 
     		secondButton.style.visibility = "hidden";
+    	}
+
+    	// handles click and invokes connect() then updateScript()
+    	function handleClick() {
+    		Promise.resolve(connect()).then(updateScript());
     	}
 
     	const sendCtxIndex = i => {
@@ -1095,8 +1085,7 @@
     	let bundleResource;
 
     	chrome.devtools.inspectedWindow.getResources(resources => {
-    		// search for bundle file
-    		//   possibly first thing in array with type = script ??
+    		// search for bundle file, probably first thing in resources array with type 'script'
     		for (let i = 0; i < resources.length; i++) {
     			if (resources[i].type === 'script') {
     				resources[i].getContent((content, encoding) => {
@@ -1129,7 +1118,8 @@
     		activeIndex,
     		mainToBgPort,
     		connect,
-    		secondButtonClick,
+    		updateScript,
+    		handleClick,
     		sendCtxIndex,
     		bundleResource,
     		compState
@@ -1153,15 +1143,7 @@
     		}
     	};
 
-    	return [
-    		snapshot,
-    		activeIndex,
-    		compState,
-    		connect,
-    		secondButtonClick,
-    		sendCtxIndex,
-    		click_handler
-    	];
+    	return [snapshot, activeIndex, compState, handleClick, sendCtxIndex, click_handler];
     }
 
     class App extends SvelteComponentDev {

@@ -8,6 +8,7 @@
       {#if state}
         {#if Array.isArray(state)}
           <li>Array: 
+            <!-- using self-referential component to recursively break down  -->
           <svelte:self compState={state} />
           </li>
         {:else}
