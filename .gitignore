@@ -1,6 +1,9 @@
 build/*.js
 .DS_Store
 node_modules/*
+chrome_extension/build/*.js
+chrome_extension/build/*.js.map
+chrome_extension/build/*.css
 public/build/*.js
 public/build/*.js.map
 public/build/*.css
