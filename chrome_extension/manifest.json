@@ -7,6 +7,11 @@
   "background": {
     "scripts": ["background.js"]
   },
-  "permissions": ["tabs", "activeTab", "debugger", "<all_urls>"],
+  "permissions": ["tabs", "activeTab", "*://localhost:*/*"],
+  "icons": {
+    "16": "SvelteDeLorean.png",
+    "48": "SvelteDeLorean.png",
+    "128": "SvelteDeLorean.png"
+  },
   "web_accessible_resources": ["./contentScript.js"]
 }
