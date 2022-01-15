@@ -1,6 +1,6 @@
-<script>
-  export let counter = 0;
-  function handleClick() {
+<script lang="ts">
+  export let counter: number = 0;
+  function handleClick(): void {
     counter = counter + 1;
   }
 </script>

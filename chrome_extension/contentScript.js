@@ -5,9 +5,9 @@ let messageListeners = false;
 
 if (!messageListeners) {
   window.addEventListener(
-    "message",
+    'message',
     (messageEvent) => {
-      if (messageEvent.data.body !== "TIME_TRAVEL") {
+      if (messageEvent.data.body !== 'TIME_TRAVEL') {
         messageEvent.source == window &&
           chrome.runtime.sendMessage(messageEvent.data);
       }
@@ -17,19 +17,18 @@ if (!messageListeners) {
   messageListeners = true;
 }
 
-let index;
+let index = 0;
 // testing update script feature
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
-  
   // console.log("reached content script from dev tools");
-  if(req.body === "TIME_TRAVEL") {
+  if (req.body === 'TIME_TRAVEL') {
     const i = req.ctxIndex;
-    window.postMessage({ body: "TIME_TRAVEL", ctxIndex: i })
+    window.postMessage({ body: 'TIME_TRAVEL', ctxIndex: i });
   }
 
-  if (req.body === "UPDATE") {
-    window.tag = document.createElement("script");
-    const root = document.getElementById("root");
+  if (req.body === 'UPDATE') {
+    window.tag = document.createElement('script');
+    const root = document.getElementById('root');
     while (root.children.length) {
       root.children[0].remove();
     }
@@ -49,38 +48,32 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
         root.addEventListener('SvelteRegisterComponent', (e) => {
           components.push(e.detail.component);
           counter++;
+          
+          // TOFIX: counter is implemented to avoid excessive event listeners attached to root to account for the process of onboarding multiple componenets, but it is hard coded for single component right now
           if (counter >= 1) {
             root.addEventListener('SvelteRegisterBlock', (blockEvent) => {
-                const curState = [];
-
-                  components.forEach((component) => {
-                    if (!blockEvent.detail.ctx.includes("DONOTPUSH")) {
-                      curState.push([component, blockEvent.detail.ctx]);
-                      cacheState.push(curState);
-                      console.log(blockEvent.detail.ctx);
-                      // small hack to fix problem of changing state when a state button on the devtool that isn't the most recent copy of state is active
-                      // made it so that state is updated to most recent copy of state before the next update of state is rendered on testing app
-                      // cacheState[cacheState.length - 1][0][0].$$.fragment.p([...cacheState[cacheState.length - 1][0][1], "DONOTPUSH"], [-1])
-                      sendMessages(parseEvent(blockEvent.detail));
-                    }
-                  })
+              const curState = [];
+              components.forEach((component) => {
+                if (!blockEvent.detail.ctx.includes("DONOTPUSH")) {
+                  curState.push([component, blockEvent.detail.ctx]);
+                  cacheState.push(curState);
+                  console.log(blockEvent.detail.ctx);
+                  // cacheState[cacheState.length - 1][0][0].$$.fragment.p([...cacheState[cacheState.length - 1][0][1], "DONOTPUSH"], [-1])
+                  sendMessages(parseEvent(blockEvent.detail));
+                }
+              })
             })
           }
         });
-        
+        // // These event listeners aren't being used in this version, but could provide valuable data for future versions of this product
         // root.addEventListener('SvelteDOMInsert', (e) => sendMessages(parseEvent(e.detail)));
-        // root.addEventListener('SvelteDOMRemove', (e) => {
-        //   console.log('%c this is the svelteDomRemove emitter being fired', "background: orange", e.detail);
-        // });
+        // root.addEventListener('SvelteDOMRemove', (e) => sendMessages(parseEvent(e.detail)));
         // root.addEventListener('SvelteDOMAddEventListener', (e) => sendMessages(parseEvent(e.detail)));
         // root.addEventListener('SvelteDOMRemoveEventListener',(e) => sendMessages(parseEvent(e.detail)));
         // root.addEventListener('SvelteDOMSetData', (e) => sendMessages(parseEvent(e.detail)));
         // root.addEventListener('SvelteDOMSetProperty', (e) => sendMessages(parseEvent(e.detail)));
         // root.addEventListener('SvelteDOMSetAttribute', (e) => sendMessages(parseEvent(e.detail)));
-        // root.addEventListener('SvelteDOMRemoveAttribute', (e) => {
-        //   console.log('%c this is the svelteDomRemoveAttribute emitter being fired', "background: pink", e.detail);
-        //   sendMessages(parseEvent(e.detail))
-        // });
+        // root.addEventListener('SvelteDOMRemoveAttribute', (e) => sendMessages(parseEvent(e.detail)));
       };
 
     setupListeners(window.document);

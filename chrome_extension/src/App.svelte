@@ -1,17 +1,16 @@
-<script>
+<script lang="ts">
   // value coming into App.svelte that updates state will be in an array,
   // we need to update our state by adding new elements into the existing array
-  import State from "./State.svelte";
-  export let snapshot = [];
-  let activeIndex = 0;
+  import State from './State.svelte';
+  export let snapshot: Array<any> = [];
+  let activeIndex: number = 0;
   $: compState = snapshot[activeIndex];
 
-
-  let mainToBgPort;
+  let mainToBgPort: any;
 
   // connect devtool to inspected webpage
   function connect() {
-    chrome.runtime.sendMessage({ body: "runContentScript" }, (response) => {});
+    chrome.runtime.sendMessage({ body: 'runContentScript' }, (response) => {});
 
     mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.js
     mainToBgPort.onMessage.addListener((msg, sender, sendResponse) => {
@@ -20,23 +19,24 @@
         snapshot = snapshot;
       }
     });
-    connectButton.style.visibility = "hidden";
+    let connectButton: any = document.getElementById('connectButton');
+    connectButton.style.visibility = 'hidden';
   }
 
   // injects logic into inspected webpage's DOM
-  function updateScript(){
-    mainToBgPort.postMessage({ body: "updateScript", script: bundleResource });
+  function updateScript(): any {
+    mainToBgPort.postMessage({ body: 'updateScript', script: bundleResource });
   }
-  
+
   // handles click and invokes connect() then updateScript()
-  function handleClick(){
+  function handleClick() {
     Promise.resolve(connect()).then(updateScript());
   }
   const sendCtxIndex = (i) => {
-    mainToBgPort.postMessage({ body: "updateCtx", ctxIndex: i });
-  }
-  
-  let bundleResource;
+    mainToBgPort.postMessage({ body: 'updateCtx', ctxIndex: i });
+  };
+
+  let bundleResource: any;
   chrome.devtools.inspectedWindow.getResources((resources) => {
     // search for bundle file, probably first thing in resources array with type 'script'
     for (let i = 0; i < resources.length; i++) {
@@ -46,8 +46,9 @@
         });
         break;
       }
-  }});
-  </script>
+    }
+  });
+</script>
 
 <div>
   <span>
@@ -61,7 +62,10 @@
         <button
           class="stateButton {activeIndex === i ? 'active' : ''}"
           id="button{i}"
-          on:click={() => { sendCtxIndex(i); activeIndex = i} }>State {i + 1}</button
+          on:click={() => {
+            sendCtxIndex(i);
+            activeIndex = i;
+          }}>State {i + 1}</button
         >
       </span><br />
     {/each}
@@ -78,7 +82,7 @@
 
   #connectButton:hover {
     background-color: rgb(230, 230, 230);
-    transition-duration: .2s;
+    transition-duration: 0.2s;
   }
 
   #main-page {
@@ -88,7 +92,7 @@
   .buttons {
     display: flex;
     flex-direction: column;
-    border-right: 1px grey solid;
+    /* border-right: 1px grey solid; */
     padding-right: 10px;
     max-height: 100vh;
     overflow: scroll;

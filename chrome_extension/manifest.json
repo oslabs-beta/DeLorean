@@ -5,7 +5,7 @@
   "manifest_version": 2,
   "devtools_page": "./devtools.html",
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["background.ts"]
   },
   "permissions": ["tabs", "activeTab", "*://localhost/*"],
   "icons": {
