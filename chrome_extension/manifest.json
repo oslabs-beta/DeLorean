@@ -7,7 +7,7 @@
   "background": {
     "scripts": ["background.js"]
   },
-  "permissions": ["tabs", "activeTab", "*://localhost:*/*"],
+  "permissions": ["tabs", "activeTab", "*://localhost/*"],
   "icons": {
     "16": "SvelteDeLorean.png",
     "48": "SvelteDeLorean.png",
