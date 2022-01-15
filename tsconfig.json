@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
+    "outDir": "./chrome_extension/build/",
     "noImplicitAny": false,
     "importsNotUsedAsValues": "remove",
     "module": "esNext",
@@ -12,23 +12,24 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-			"client/*": ["client/*"]
-		},
+      "client/*": ["client/*"]
+    },
     "types": [
-			"svelte",
-			"svelte/store",
-			"svelte/motion",
-			"svelte/transition",
-			"svelte/animate",
-			"svelte/easing"
-		]
+      "svelte",
+      "svelte/store",
+      "svelte/motion",
+      "svelte/transition",
+      "svelte/animate",
+      "svelte/easing",
+      "chrome"
+    ]
   },
   "include": ["client/*"],
   "exclude": ["./node_modules/*"],
   "extends": "@tsconfig/svelte/tsconfig.json",
   "ts-node": {
-		"compilerOptions": {
-			"module": "commonjs"
-		}
-	}
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }
