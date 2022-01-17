@@ -15,7 +15,8 @@
     mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.js
     mainToBgPort.onMessage.addListener((msg, sender, sendResponse) => {
       if (!snapshot.includes(msg.body.ctx)) {
-        snapshot.push(msg.body.ctx);
+        console.log(msg.body.ctx);
+        snapshot.push([msg.body.ctx[0][1], msg.body.ctx[1][1]]);
         snapshot = snapshot;
       }
     });
@@ -95,8 +96,9 @@
     /* border-right: 1px grey solid; */
     padding-right: 10px;
     max-height: 100vh;
-    overflow: scroll;
+    overflow: visible scroll;
     width: 125px;
+    flex-basis: 20%;
   }
   .stateButton {
     background-color: rgb(230, 230, 230);
