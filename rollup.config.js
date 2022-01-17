@@ -36,7 +36,7 @@ function serve() {
 
 export default [
   {
-    input: './chrome_extension/src/index.ts',
+    input: './chrome_extension/src/index.js',
     external: 'chrome',
     output: {
       sourcemap: false,
@@ -52,8 +52,6 @@ export default [
           dev: !production,
         },
       }),
-      // we'll extract any component CSS out into
-      // a separate file - better for performance
       css({ output: 'bundle.css' }),
 
       // If you have external dependencies installed from
@@ -68,15 +66,9 @@ export default [
       commonjs(),
       typescript({
         sourceMap: false,
-        inlineSources: !production,
+        inlineSources: false,
       }),
-
-      // Watch the `public` directory and refresh the
-      // browser on changes when not in production
-      !production && livereload('public'),
-
-      // If we're building for production (npm run build
-      // instead of npm run dev), minify
+      // Minify for production build
       production && terser(),
     ],
     watch: {
@@ -87,7 +79,7 @@ export default [
     input: './client/main.ts',
     external: 'chrome',
     output: {
-      sourcemap: false,
+      sourcemap: !production,
       format: 'iife',
       name: 'demoApp',
       file: './public/build/bundle.js',
@@ -115,7 +107,7 @@ export default [
       }),
       commonjs(),
       typescript({
-        sourceMap: false,
+        sourceMap: !production,
         inlineSources: !production,
       }),
 
