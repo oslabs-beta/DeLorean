@@ -4,13 +4,20 @@
 
 <div>
   <ul>
-    {#each compState || [] as state, i}
+    {#each compState || [] as state}
       {#if state}
         {#if Array.isArray(state)}
           <li>
             Array:
-            <!-- using self-referential component to recursively break down elements of compState if it is an array to be primitives -->
+            <!-- using self-referential component to recursively break down 
+              elements of compState if it is an array to be primitives -->
             <svelte:self compState={state} />
+          </li>
+        {:else if typeof state === "object"}
+          <li>
+            {#each Object.entries(state) as [variable, value]}
+              {variable}: <ul><li>{value}</li></ul>
+            {/each}
           </li>
         {:else}
           <li>{state}</li>
