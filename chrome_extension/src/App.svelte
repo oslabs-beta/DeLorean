@@ -1,7 +1,7 @@
 <script lang="ts">
   // value coming into App.svelte that updates state will be in an array,
   // we need to update our state by adding new elements into the existing array
-  import State from './State.svelte';
+  import State from "./State.svelte";
   export let snapshots: Array<any> = [];
   let activeIndex: number = 0;
   $: compState = snapshots[activeIndex];
@@ -10,44 +10,51 @@
 
   // connect devtool to inspected webpage
   function connect() {
-    chrome.runtime.sendMessage({ body: 'runContentScript' }, (response) => {});
+    // chrome.runtime.sendMessage({ body: "runContentScript" }, (response) => {});
 
     mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.js
     mainToBgPort.onMessage.addListener((msg, sender, sendResponse) => {
       if (!snapshots.includes(msg.body)) {
-        // console.log(msg.body)
-        const moment =[];
+        const moment = [];
         msg.body.componentStates.forEach((state) => {
           const obj = {};
           obj[state[2]] = state[1];
           moment.push(obj);
         });
-        snapshots = [...snapshots.slice(0, msg.body.cacheLength), moment]
+        snapshots = [...snapshots.slice(0, msg.body.cacheLength), moment];
       }
     });
-    let connectButton: any = document.getElementById('connectButton');
-    connectButton.style.visibility = 'hidden';
+    let connectButton: any = document.getElementById("connectButton");
+    connectButton.style.visibility = "hidden";
   }
 
   // injects logic into inspected webpage's DOM
   function updateScript(): any {
-    mainToBgPort.postMessage({ body: 'updateScript', script: bundleResource });
+    console.log(mainToBgPort);
+    mainToBgPort.postMessage({
+      body: "runContentScript",
+    });
+    mainToBgPort.postMessage({
+      body: "updateScript",
+      script: bundleResource,
+    });
   }
 
   // handles click and invokes connect() then updateScript()
   function handleClick() {
-    Promise.resolve(connect()).then(updateScript());
+    connect();
+    updateScript();
   }
-  
+
   const sendCtxIndex = (i) => {
-    mainToBgPort.postMessage({ body: 'updateCtx', ctxIndex: i });
+    mainToBgPort.postMessage({ body: "updateCtx", ctxIndex: i });
   };
 
   let bundleResource: any;
   chrome.devtools.inspectedWindow.getResources((resources) => {
     // search for bundle file, probably first thing in resources array with type 'script'
     for (let i = 0; i < resources.length; i++) {
-      if (resources[i].type === 'script') {
+      if (resources[i].type === "script") {
         resources[i].getContent((content, encoding) => {
           bundleResource = content;
         });
