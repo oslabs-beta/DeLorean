@@ -53,6 +53,7 @@
   </h1>
   <button on:click={timeTravel}>Think again!</button>
   <Child />
+  <Child />
   <p>What's on your mind?</p>
   <ul>
     {#each things as thing}
