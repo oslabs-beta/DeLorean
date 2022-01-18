@@ -52,7 +52,8 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
 
       function checkIfChanged(componentState, i) {
         if (!cacheState.length ||
-          JSON.stringify(cacheState[cacheState.length - 1][i][1]) !== JSON.stringify(componentState[1])) {
+          (JSON.stringify(cacheState[cacheState.length - 1][i][1]) !== JSON.stringify(componentState[1])
+          && JSON.stringify(cacheState[lastSentIndex][i][1]) !== JSON.stringify(componentState[1]))) {
           if (cacheState.length) console.log('current cache state: ', cacheState[cacheState.length - 1][i][1]) 
           console.log('state to add: ', componentState[1]) 
           return true
