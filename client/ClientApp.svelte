@@ -1,5 +1,5 @@
 <script lang="ts">
-  // import Child from "./Child.svelte"
+  import Child from "./Child.svelte"
   let mph: number = 30;
   let excitement: string = '';
 
@@ -51,8 +51,9 @@
     {mph < 88 ? 'Cruising at' : 'Approaching'}
     {mph} miles per hour{excitement}
   </h1>
-  <button on:click={timeTravel}>Time travel!</button>
-  <!-- <Child /> -->
+  <button on:click={timeTravel}>Think again!</button>
+  <Child />
+  <Child />
   <p>What's on your mind?</p>
   <ul>
     {#each things as thing}

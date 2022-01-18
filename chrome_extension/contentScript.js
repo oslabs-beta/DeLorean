@@ -35,60 +35,69 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
 
     window.tag.text = `(function () { 
       'use strict';
-      const sendMessages = (eventDetail) => {
-        window.postMessage({ body: eventDetail });
-      };
 
-      const parseEvent = (event) => JSON.parse(JSON.stringify(event));
+      const parse = (event) => JSON.parse(JSON.stringify(event));
       let cacheState = [];
       const components = [];
-      let counter = 0;
+      let lastIndex = 0;
 
-      function setupListeners(root) {
-        root.addEventListener('SvelteRegisterComponent', (e) => {
-          components.push(e.detail.component);
-          counter++;
-          
-          // TOFIX: counter is implemented to avoid excessive event listeners attached to root to account for the process of onboarding multiple componenets, but it is hard coded for single component right now
-          if (counter >= 1) {
-            root.addEventListener('SvelteRegisterBlock', (blockEvent) => {
-              const curState = [];
-              components.forEach((component) => {
-                if (!blockEvent.detail.ctx.includes("DONOTPUSH")) {
-                  curState.push([component, blockEvent.detail.ctx]);
-                  cacheState.push(curState);
-                  // cacheState[cacheState.length - 1][0][0].$$.fragment.p([...cacheState[cacheState.length - 1][0][1], "DONOTPUSH"], [-1])
-                  sendMessages(parseEvent({ctx : [...component.$$.ctx]}));
-                }
-              })
-            })
+      const sendMessages = (componentStates) => {
+        window.postMessage({ 
+          body: { 
+            componentStates: componentStates, 
+            cacheLength: cacheState.length 
           }
         });
-        // // These event listeners aren't being used in this version, but could provide valuable data for future versions of this product
-        // root.addEventListener('SvelteDOMInsert', (e) => sendMessages(parseEvent(e.detail)));
-        // root.addEventListener('SvelteDOMRemove', (e) => sendMessages(parseEvent(e.detail)));
+      };
+
+      // add all Svelte components to array
+      window.document.addEventListener('SvelteRegisterComponent', (e) => {
+        components.push(e.detail.component);
+      })
+      setTimeout(saveAndDispatchState, 0);
+
+      function checkIfChanged(componentState, i) {
+        // if caches state is empty... or the most recent cache state is different
+        // and the state at the last sent index is different, then state has truly changed
+        if (!cacheState.length ||
+          (JSON.stringify(cacheState[cacheState.length - 1][i][1]) !== JSON.stringify(componentState[1])
+          && JSON.stringify(cacheState[lastIndex][i][1]) !== JSON.stringify(componentState[1]))) {
+          return true;
+        } else return false;
+      }
+
+      function saveAndDispatchState() {
+        const curState = [];
+        components.forEach((component) => {
+          curState.push([component, component.$capture_state(), component.constructor.name]);
+        })
+        // only add to cache & send messages if any state has actually changed
+        if (curState.some(checkIfChanged)) {
+        // if cacheState is logner than the last index, we are back in time and should start a new branch
+          if (cacheState.length > lastIndex){
+            cacheState = cacheState.slice(0, lastIndex + 1)
+          }
+          sendMessages(parse(curState));
+          cacheState.push([...curState]);
+          lastIndex = cacheState.length - 1;
+        }
+      }
+
+      function setupListeners(root) {
+        root.addEventListener('SvelteRegisterBlock', (e) => saveAndDispatchState());
+        root.addEventListener('SvelteDOMSetData', (e) => saveAndDispatchState());
+        root.addEventListener('SvelteDOMInsert', (e) => saveAndDispatchState());
+
+        // These event listeners aren't being used in this version, but could provide valuable data for future versions of this product
+        // root.addEventListener('SvelteDOMRemove', (e) => (e) => sendMessages(parseEvent(e.detail)));
         // root.addEventListener('SvelteDOMAddEventListener', (e) => sendMessages(parseEvent(e.detail)));
         // root.addEventListener('SvelteDOMRemoveEventListener',(e) => sendMessages(parseEvent(e.detail)));
-        // root.addEventListener('SvelteDOMSetData', (e) => sendMessages(parseEvent(e.detail)));
         // root.addEventListener('SvelteDOMSetProperty', (e) => sendMessages(parseEvent(e.detail)));
         // root.addEventListener('SvelteDOMSetAttribute', (e) => sendMessages(parseEvent(e.detail)));
         // root.addEventListener('SvelteDOMRemoveAttribute', (e) => sendMessages(parseEvent(e.detail)));
       };
 
-    setupListeners(window.document);
-    for (let i = 0; i < window.frames.length; i++) {
-      const frame = window.frames[i];
-      const root = frame.document;
-      setupListeners(root);
-      const timer = setInterval(() => {
-        if (root == frame.document) return;
-        clearTimeout(timer);
-        setupListeners(frame.document);
-      }, 0);
-      root.addEventListener('readystatechange', (e) => clearTimeout(timer), {
-        once: true,
-      });
-    }
+    setTimeout(() => setupListeners(window.document));
   
     ${req.script};
 
@@ -97,9 +106,12 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
       (messageEvent) => {
         if (messageEvent.data.body === 'TIME_TRAVEL') {
           const i = messageEvent.data.ctxIndex;
+          lastIndex = i;
+          console.log('received index ', i, ' cache length is ', cacheState.length)
           if (cacheState[i]) {
             cacheState[i].forEach((componentState) => {
-              componentState[0].$$.fragment.p([...componentState[1], "DONOTPUSH"], [-1])
+              console.log('injecting: ', componentState)
+              componentState[0].$inject_state(componentState[1])
             })
           }
         }

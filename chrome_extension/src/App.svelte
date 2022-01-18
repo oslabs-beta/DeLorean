@@ -2,9 +2,9 @@
   // value coming into App.svelte that updates state will be in an array,
   // we need to update our state by adding new elements into the existing array
   import State from './State.svelte';
-  export let snapshot: Array<any> = [];
+  export let snapshots: Array<any> = [];
   let activeIndex: number = 0;
-  $: compState = snapshot[activeIndex];
+  $: compState = snapshots[activeIndex];
 
   let mainToBgPort: any;
 
@@ -14,9 +14,15 @@
 
     mainToBgPort = chrome.runtime.connect(); // attempt to open port to background.js
     mainToBgPort.onMessage.addListener((msg, sender, sendResponse) => {
-      if (!snapshot.includes(msg.body.ctx)) {
-        snapshot.push(msg.body.ctx);
-        snapshot = snapshot;
+      if (!snapshots.includes(msg.body)) {
+        // console.log(msg.body)
+        const moment =[];
+        msg.body.componentStates.forEach((state) => {
+          const obj = {};
+          obj[state[2]] = state[1];
+          moment.push(obj);
+        });
+        snapshots = [...snapshots.slice(0, msg.body.cacheLength), moment]
       }
     });
     let connectButton: any = document.getElementById('connectButton');
@@ -32,6 +38,7 @@
   function handleClick() {
     Promise.resolve(connect()).then(updateScript());
   }
+  
   const sendCtxIndex = (i) => {
     mainToBgPort.postMessage({ body: 'updateCtx', ctxIndex: i });
   };
@@ -57,7 +64,7 @@
 </div>
 <div id="main-page">
   <div class="buttons">
-    {#each snapshot as instance, i}
+    {#each snapshots as instance, i}
       <span>
         <button
           class="stateButton {activeIndex === i ? 'active' : ''}"
@@ -95,8 +102,9 @@
     /* border-right: 1px grey solid; */
     padding-right: 10px;
     max-height: 100vh;
-    overflow: scroll;
-    width: 125px;
+    overflow: visible scroll;
+    min-width: 75px;
+    flex-basis: auto;
   }
   .stateButton {
     background-color: rgb(230, 230, 230);
