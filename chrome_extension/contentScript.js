@@ -35,14 +35,20 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
 
     window.tag.text = `(function () { 
       'use strict';
-      const sendMessages = (eventDetail) => {
-        window.postMessage({ body: eventDetail });
-      };
 
-      const parseEvent = (event) => JSON.parse(JSON.stringify(event));
+      const parse = (event) => JSON.parse(JSON.stringify(event));
       let cacheState = [];
       const components = [];
-      let lastSentIndex = 0;
+      let lastIndex = 0;
+
+      const sendMessages = (componentStates) => {
+        window.postMessage({ 
+          body: { 
+            componentStates: componentStates, 
+            cacheLength: cacheState.length 
+          }
+        });
+      };
 
       // add all Svelte components to array
       window.document.addEventListener('SvelteRegisterComponent', (e) => {
@@ -51,24 +57,29 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
       setTimeout(saveAndDispatchState, 0);
 
       function checkIfChanged(componentState, i) {
+        // if caches state is empty... or the most recent cache state is different
+        // and the state at the last sent index is different, then state has truly changed
         if (!cacheState.length ||
           (JSON.stringify(cacheState[cacheState.length - 1][i][1]) !== JSON.stringify(componentState[1])
-          && JSON.stringify(cacheState[lastSentIndex][i][1]) !== JSON.stringify(componentState[1]))) {
-          if (cacheState.length) console.log('current cache state: ', cacheState[cacheState.length - 1][i][1]) 
-          console.log('state to add: ', componentState[1]) 
-          return true
+          && JSON.stringify(cacheState[lastIndex][i][1]) !== JSON.stringify(componentState[1]))) {
+          return true;
         } else return false;
       }
 
       function saveAndDispatchState() {
         const curState = [];
         components.forEach((component) => {
-          curState.push([component, component.$capture_state()]);
+          curState.push([component, component.$capture_state(), component.constructor.name]);
         })
         // only add to cache & send messages if any state has actually changed
         if (curState.some(checkIfChanged)) {
-          sendMessages(parseEvent({ctx : parseEvent([...curState])}));
-          cacheState.push(curState);
+        // if cacheState is logner than the last index, we are back in time and should start a new branch
+          if (cacheState.length > lastIndex){
+            cacheState = cacheState.slice(0, lastIndex + 1)
+          }
+          sendMessages(parse(curState));
+          cacheState.push([...curState]);
+          lastIndex = cacheState.length - 1;
         }
       }
 
@@ -95,10 +106,11 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
       (messageEvent) => {
         if (messageEvent.data.body === 'TIME_TRAVEL') {
           const i = messageEvent.data.ctxIndex;
-          lastSentIndex = i;
-          console.log('recieved index ', i, ' cache length is ', cacheState.length)
+          lastIndex = i;
+          console.log('received index ', i, ' cache length is ', cacheState.length)
           if (cacheState[i]) {
             cacheState[i].forEach((componentState) => {
+              console.log('injecting: ', componentState)
               componentState[0].$inject_state(componentState[1])
             })
           }
