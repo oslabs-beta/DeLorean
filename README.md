@@ -1,17 +1,17 @@
 ![](assets/marquee_promo.png)
 
 # DeLorean
-The first time-travelling debugger for Svelte applciations.
+The first time-traveling debugger for Svelte applications.
 
-DeLorean is a debugging tool for Svelte developers. It records snapshots when a target applications's state changes, and allows users to jump to any previously recorded state. It also displays the names and values of all variables in your application at the time of the snapshot alongside the state jump button.
+DeLorean is a debugging tool for Svelte developers. It records snapshots when a target applications's state changes and allows users to jump to any previously recorded state. It also displays the names and values of all variables in your application at the time of the snapshot alongside the state jump button.
 
 ## Features
 
 #### Dev tool information panel
-DeLorean features a clean, minimal UI that's easily accessible from within the Chrome developer tools panel. It displays the names of each component and the names of all variables that component contains. Each variable displays its value at whatver point in time you are examining.
+DeLorean features a clean, minimal UI that's easily accessible from within the Chrome developer tools panel. It displays the names of each component and the names of all variables that component contains. Each variable displays its value at whatever point in time you are examining.
 
 #### Application state time-travel
-In addition to displaying component and variable information, DeLorean resets your application's state to the values it contained at any point since DeLorean was connected to your application. This allows for step-by-step examination of state change sequences within an application, easing the challenge of tracking state changes over time and reducing the need for ```console.log```s.
+By simply clicking on one of the state buttons, DeLorean will display the state information of the entire app at the point in time that it was captured. In addition to displaying component and variable information, DeLorean resets your application's state to the values it contained at any point since DeLorean was connected to your application. This allows for step-by-step examination of state change sequences within an application, easing the challenge of tracking state changes over time and reducing the need for ```console.log```s.
 
 ## Installation
 At this time, DeLorean is undergoing standard Chrome extension code review in the Chrome Web Store. When that is complete, installation will be as easy as navigating to the DeLorean page in the Web Store and clicking install. From there it will be available in your Chrome developer tools panel. 
@@ -74,15 +74,15 @@ Changing state after clicking on a previous state button will lead to the creati
 
 [] Are you running your app from something other than a localhost url?
 
-[] Was your app developed with SvelteKit? Att this time, DeLorean is untested with SvelteKit applications, and there are likely to be implementation issues. If you want DeLorean to work with SveleteKit now, feel free to [contribute](#contribute) to the project!
+[] Was your app developed with SvelteKit? At this time, DeLorean is untested with SvelteKit applications, and there are likely to be implementation issues. If you want DeLorean to work with SveleteKit now, feel free to [contribute](#contribute) to the project!
 
 #### DeLorean is showing a blank screen after closing the Dev Tools panel
 
-[] DeLorean receives initial state after connecting for the first time. If you've closed an reopened the Dev Tools panel, just click connect and change some state in your applciation and DeLorean will start to track it, although only from the point of second of second connection onwards.
+[] DeLorean receives initial state after connecting for the first time. If you've closed and reopened the Dev Tools panel, just click Connect and change some state in your application and DeLorean will start to track it, although only from the point of second connection onwards.
 
 ## Contribute
 
-DeLorean is fully open-source, and we would love to get more brains working on the project. If you'd like to fix bugs, fork the repo, make some changes and submit a pull request. Our team will review your changes and work to integrate functional code. 
+DeLorean is fully open-source, and we would love to get more brains working on the project. If you'd like to fix bugs or add a new feature, fork the repo, make some changes and submit a pull request. Our team will review your changes and work to integrate functional code. 
 
 We have a number of features in our backlog to implement, including consistent SvelteKit integration, creation of an ignore list to stop tracking certain variables, and persistent storage, so that state history can be saved even after closing out of the extension.
 
