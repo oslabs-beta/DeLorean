@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.2",
+    "puppeteer": "^13.1.1",
     "sirv-cli": "^2.0.1"
   },
   "devDependencies": {
