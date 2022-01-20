@@ -95,7 +95,7 @@ If you have a feature request in mind, please submit an issue so our team can de
 
 ## Learn More
 
-Read more at [Medium](https://medium.com/@vantassel.sam/time-travel-debugging-in-svelte-with-delorean-26e04efe9474)
+Read more at Medium -- [Time Travel Debugging in Svelte with DeLorean](https://medium.com/@vantassel.sam/time-travel-debugging-in-svelte-with-delorean-26e04efe9474)
 
 Special thanks to RedHatter's [Svelte Dev Tools](https://github.com/RedHatter/svelte-devtools) for providing examples of how Svelte's dev mode listeners can be utilized.
 
