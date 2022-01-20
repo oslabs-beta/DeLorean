@@ -50,16 +50,17 @@ This extension's permissions are scoped to ```localhost:<PORT>``` urls only, so 
 
 #### Click Connect
 Once your app is up and running, open the Dev Tools panel and select DeLorean from the dropdown in the navbar. Then click connect, and you should see your application's intial state.
+
 ![connect to app demo](assets/connect.gif)
 
 #### Make some state changes, then click the state buttons
 Have fun! DeLorean tracks every stateful update and reflects it in real time in the Dev Tool panel. If you click on the state buttons that appear in the Dev Tool panel, you will see your application's state at that moment reflected in the application, as well as each component's variables with their names and values displayed in the devtool.
+
 ![capture state and time travel demo](assets/capture_state_time_travel.gif)
 
 Changing state after clicking on a previous state button will lead to the creation of a memory stack. This erases the old changes made to your application's state and allows you to explore a different sequence of state changes on your application, without needing to reresh or restart your application.
-![new memory stack demo](assets/new_memory.gif)
 
-![](assets/small_promo.png)
+![new memory stack demo](assets/new_memory.gif)
 
 ## Troubleshooting
 
