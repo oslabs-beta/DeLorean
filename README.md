@@ -95,7 +95,7 @@ If you have a feature request in mind, please submit an issue so our team can de
 
 ## Learn More
 
-Vist the [DeLorean website](http://delorean.software)
+Visit the [DeLorean website](http://delorean.software)
 
 Read more at Medium - [Time Travel Debugging in Svelte with DeLorean](https://medium.com/@vantassel.sam/time-travel-debugging-in-svelte-with-delorean-26e04efe9474)
 
