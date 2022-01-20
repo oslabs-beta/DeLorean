@@ -93,6 +93,8 @@ We have a number of features in our backlog to implement, including consistent S
 
 If you have a feature request in mind, please submit an issue so our team can determine if it is an appropriate feature for DeLorean.
 
+![large_promo](https://user-images.githubusercontent.com/92942127/150396440-249b8334-c4cd-41bc-9bfc-68e80183df2c.png)
+
 ## Learn More
 
 Read more at Medium - [Time Travel Debugging in Svelte with DeLorean](https://medium.com/@vantassel.sam/time-travel-debugging-in-svelte-with-delorean-26e04efe9474)
