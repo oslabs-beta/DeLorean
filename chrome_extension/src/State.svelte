@@ -30,6 +30,7 @@
   }
   .object {
     background-color: whitesmoke;
+    width: 90vh;
     margin: 2px;
   }
 </style>

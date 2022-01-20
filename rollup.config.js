@@ -79,7 +79,6 @@ export default [
     input: './client/main.ts',
     external: 'chrome',
     output: {
-      sourcemap: !production,
       format: 'iife',
       name: 'demoApp',
       file: './public/build/bundle.js',

@@ -1,7 +1,7 @@
 {
   "name": "DeLorean",
   "description": "Time-travel debugger for Svelete applications",
-  "version": "1.0",
+  "version": "1.2",
   "manifest_version": 2,
   "devtools_page": "./devtools.html",
   "background": {
@@ -9,9 +9,9 @@
   },
   "permissions": ["tabs", "activeTab", "*://localhost/*"],
   "icons": {
-    "16": "SvelteDeLorean.png",
-    "48": "SvelteDeLorean.png",
-    "128": "SvelteDeLorean.png"
+    "16": "delorean_logo_128.png",
+    "48": "delorean_logo_128.png",
+    "128": "delorean_logo_128.png"
   },
   "web_accessible_resources": ["./contentScript.js"]
 }
