@@ -1,19 +1,17 @@
 {
-  "name": "Getting Started Example",
-  "description": "Build an Extension!",
-  "version": "1.0",
-  "manifest_version": 3,
+  "name": "DeLorean",
+  "description": "Time-travel debugger for Svelete applications",
+  "version": "1.2",
+  "manifest_version": 2,
+  "devtools_page": "./devtools.html",
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"]
   },
-  "permissions": ["storage", "activeTab", "scripting"],
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "128": "/SvelteDeLorean.png"
-    }
-  },
+  "permissions": ["tabs", "activeTab", "*://localhost/*"],
   "icons": {
-    "128": "/SvelteDeLorean.png"
-  }
+    "16": "delorean_logo_128.png",
+    "48": "delorean_logo_128.png",
+    "128": "delorean_logo_128.png"
+  },
+  "web_accessible_resources": ["./contentScript.js"]
 }

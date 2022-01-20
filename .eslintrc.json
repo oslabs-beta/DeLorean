@@ -1,0 +1,41 @@
+{
+  "extends": ["airbnb-base", "eslint:recommended", "plugin:import/recommended"],
+  "root": true,
+  "plugins": ["import", "svelte3"],
+  "overrides": [
+    {
+      "files": ["**/*.svelte"],
+      "processor": "svelte3/svelte3"
+    }
+  ],
+  "rules": {
+    "indent": ["warn", 2],
+    "no-unused-vars": ["off", { "vars": "local" }],
+    "import/no-unresolved": "off",
+    "import/extensions": "off",
+    "prefer-const": "warn",
+    "quotes": ["warn", "single"],
+    "space-infix-ops": "warn",
+    "no-undef": "off",
+    "import/no-extraneous-dependencies": "off",
+    "global-require": "off"
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "webextensions": true,
+    "node": true
+  },
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly",
+    "fetch": false
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2019,
+    "sourceType": "module"
+  }
+}

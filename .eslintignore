@@ -1,0 +1,6 @@
+/public/*.js
+/public/*.css
+/public/*.js.map
+/chrome_extension/build/*.js
+/chrome_extension/build/*.js.map
+/chrome_extension/build/*.css
