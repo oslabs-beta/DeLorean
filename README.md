@@ -8,34 +8,35 @@ DeLorean is a debugging tool for Svelte developers. It records snapshots when a 
 ## Features
 
 #### Dev tool information panel
-DeLorean features a clean, minimal UI that's easily accessible from within the Chrome developer tools panel. It displays the names of each component and the names of all variables that component contains. Each variable displays its value at whatever point in time you are examining.
+All stateful data is easily accessible from within DeLorean’s Chrome Developer Tools panel. The name of each component and the names of all variables that that component contains, alongside their values, are displayed. As you make changes to your app, each component’s state at the time of the state change is stored in a snapshot and cached. These snapshots are then displayed in the Dev Tools panel, and also allow for the next feature:
 
 #### Application state time-travel
-By simply clicking on one of the state buttons, DeLorean will display the state information of the entire app at the point in time that it was captured. In addition to displaying component and variable information, DeLorean resets your application's state to the values it contained at any point since DeLorean was connected to your application. This allows for step-by-step examination of state change sequences within an application, easing the challenge of tracking state changes over time and reducing the need for ```console.log```s.
+In addition to displaying component and variable information, DeLorean resets your application’s state to the values it contained at any point since DeLorean was connected to your application. This allows for step-by-step examination of state change sequences within an application, easing the challenge of tracking state changes over time and reducing the need to use ```console.log```.
+
+#### Create new timelines
+As DeLorean renders an app in its previous state, a user may want to interact with the application in a different way than before. Apps remain fully functional while being tested with DeLorean, so any changes the user makes will simply create a new timeline that is now tracked in the Dev Tools panel.
 
 ## Installation
-At this time, DeLorean is undergoing standard Chrome extension code review in the Chrome Web Store. When that is complete, installation will be as easy as navigating to the DeLorean page in the Web Store and clicking install. From there it will be available in your Chrome developer tools panel. 
-
-Until then, to install DeLorean simply navigate to the [DeLorean GitHub page](https://github.com/oslabs-beta/DeLorean). If you're interested in learning more about how DeLorean works, feel free to clone the repo! Otherwise, just download the ```chrome_extension``` folder and save it somewhere on your computer. 
+If you're interested in learning more about how DeLorean works, feel free to fork and clone this repo! Otherwise, just download the ```chrome_extension``` folder and save it somewhere on your computer. 
 
 Then navigate to [Chrome's extensions page](chrome://extensions/). Ensure you are in developer mode by clicking the 'developer mode' switch in the top-right corner of the page. Click on 'load unpacked', and select the ```chrome_extension``` folder downloaded earlier. Open up your DevTools panel, and check to make sure DeLorean is available in the dropdown menu of the navbar!
 
 ## How To Use
 
 #### Run the target app in dev mode
-Importantly, this debugging tool can only operate on Svelte applications being run in dev mode. Without dev mode enabled, Svelte's internal compiler strips some internal functionality to reduce overall bundle size. DeLorean requires that functionality, so ensure dev mode is enabled when you run tehe application to be tested.
+Importantly, this debugging tool can only operate on Svelte applications being run in dev mode. Without dev mode enabled, Svelte's compiler strips some internal functionality in order to reduce overall bundle size. DeLorean requires that functionality, so ensure dev mode is enabled when you run the application to be tested.
 
 #### Attach your Svelte app to an element with the id "root"
 At this time, DeLorean searches the tested application for an id of "root" to find Svelte components to test. An example format for an html page and its main svelte component:
 
-index.html:
+*index.html:*
 ```
 <head></head>
 <body>
   <div id="root" />
 </body>
 ```
-main.js:
+*main.js:*
 ```
 import SvelteApp from './SvelteApp.svelte';
 
@@ -45,16 +46,16 @@ new SvelteApp({
 ```
 If your application attaches to something other than an element with the id "root", DeLorean won't be able to find it.
 
-#### Run the application from localhost*
+#### Run the application from localhost:*
 This extension's permissions are scoped to ```localhost:<PORT>``` urls only, so make sure to run your application on a localhost port in order to use DeLorean.
 
 #### Click Connect
-Once your app is up and running, open the Dev Tools panel and select DeLorean from the dropdown in the navbar. Then click connect, and you should see your application's intial state.
+Once your app is up and running, open the Dev Tools panel and select DeLorean from the dropdown in the navbar. Then click Connect, and you should see your application's intial state.
 
 ![connect to app demo](assets/connect.gif)
 
 #### Make some state changes, then click the state buttons
-Have fun! DeLorean tracks every stateful update and reflects it in real time in the Dev Tool panel. If you click on the state buttons that appear in the Dev Tool panel, you will see your application's state at that moment reflected in the application, as well as each component's variables with their names and values displayed in the devtool.
+Have [fun](https://www.youtube.com/watch?v=FWG3Dfss3Jc)! DeLorean tracks every stateful update and reflects it in real time in the Dev Tool panel. If you click on the state buttons that appear in the Dev Tool panel, you will see your application's state at that moment reflected in the application, as well as each component's variables with their names and values displayed in the devtool.
 
 ![capture state and time travel demo](assets/capture_state_time_travel.gif)
 
@@ -94,7 +95,9 @@ If you have a feature request in mind, please submit an issue so our team can de
 
 ## Learn More
 
-[DeLorean -- Svelte's Very First Time-Travelling Debugger](https://www.youtube.com/watch?v=FWG3Dfss3Jc)
+Visit the [DeLorean website](http://delorean.software)
+
+Read more at Medium - [Time Travel Debugging in Svelte with DeLorean](https://medium.com/@vantassel.sam/time-travel-debugging-in-svelte-with-delorean-26e04efe9474)
 
 Special thanks to RedHatter's [Svelte Dev Tools](https://github.com/RedHatter/svelte-devtools) for providing examples of how Svelte's dev mode listeners can be utilized.
 
