@@ -29,14 +29,14 @@ Importantly, this debugging tool can only operate on Svelte applications being r
 #### Attach your Svelte app to an element with the id "root"
 At this time, DeLorean searches the tested application for an id of "root" to find Svelte components to test. An example format for an html page and its main svelte component:
 
-index.html:
+*index.html:*
 ```
 <head></head>
 <body>
   <div id="root" />
 </body>
 ```
-main.js:
+*main.js:*
 ```
 import SvelteApp from './SvelteApp.svelte';
 
@@ -46,11 +46,11 @@ new SvelteApp({
 ```
 If your application attaches to something other than an element with the id "root", DeLorean won't be able to find it.
 
-#### Run the application from localhost*
+#### Run the application from localhost:*
 This extension's permissions are scoped to ```localhost:<PORT>``` urls only, so make sure to run your application on a localhost port in order to use DeLorean.
 
 #### Click Connect
-Once your app is up and running, open the Dev Tools panel and select DeLorean from the dropdown in the navbar. Then click connect, and you should see your application's intial state.
+Once your app is up and running, open the Dev Tools panel and select DeLorean from the dropdown in the navbar. Then click Connect, and you should see your application's intial state.
 
 ![connect to app demo](assets/connect.gif)
 
