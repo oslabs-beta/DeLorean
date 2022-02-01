@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
+    "@babel/plugin-transform-modules-commonjs": "^7.16.8",
     "@babel/preset-env": "^7.16.8",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-eslint": "^8.0.1",
@@ -50,6 +51,7 @@
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-svelte": "^7.1.0",
     "rollup-plugin-terser": "^7.0.2",
+    "supertest": "^6.2.2",
     "svelte": "^3.44.3",
     "svelte-check": "^2.2.11",
     "svelte-jester": "^2.1.5",
