@@ -1,7 +1,11 @@
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+const tsPreset = require('ts-jest/jest-preset');
+const rollupJest = require('rollup-jest');
+
 
 module.exports = {
-  preset: 'ts-jest',
+  ...tsPreset,
+  ...rollupJest,
   testEnvironment: 'jsdom',
   transform: {
     '^.+\\.svelte$': 'svelte-jester',

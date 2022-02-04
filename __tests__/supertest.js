@@ -1,8 +1,5 @@
-// const request = require('supertest');
-// const path = require('path');
 import request from 'supertest';
-// import path from 'path';
-
+import path from 'path';
 
 const app = require('../server/server.ts');
 
