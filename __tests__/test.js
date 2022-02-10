@@ -58,6 +58,49 @@ describe('on clicking connect button', () => {
     await fireEvent.click(screen.getByText('Connect'));
     expect(() => screen.getByText('Connect').toThrow());
   });
+
+  it('adds events listeners to mainToBgPort', () => {
+    expect(mainToBgPort.onMessage.hasListeners()).toBe(true);
+  });
+});
+
+describe('on clicking a state button', () => {
+  let results;
+  let mainToBgPort = {};
+  mainToBgPort.postMessage = () => {};
+  chrome.runtime.connect.mockImplementation(() => ({
+    onMessage: {
+      addListener: () => {},
+    },
+    postMessage: () => {
+      body: {
+        componentStates: [],
+        cacheLength: 0
+      }
+    }
+  }));
+
+  beforeEach(async () => {
+    results = render(App);
+    await fireEvent.click(screen.getByText('Connect'));
+    // setTimeout(await fireEvent.click(screen.getByText('State')), 2000);
+    // mainToBgPort.postMessage.mockImplementation(() => {});
+    // activeIndex = 0;
+  });
+
+  it('receive the correct data types from bg', () => {
+    expect(mainToBgPort.postMessage.mock.calls.length).toBe(1);
+  });
+
+  it('posts a message on mainToBgPort', () => {
+    expect(mainToBgPort.postMessage.mock.calls.length).toBe(1);
+  });
+
+  it('changes activeIndex value', () => {
+    expect(results.activeIndex).not.toBe(1);
+    console.log('results',results)
+    console.log(results.activeIndex)
+  });
 });
 
 // describe("on receiving a message with ctx from background.js", () => {
@@ -71,8 +114,4 @@ describe('on clicking connect button', () => {
 //   it('should push undefined into snaphsots', () => {
 
 //   })
-// })
-
-// describe("on clicking a state button", () => {
-
 // })
