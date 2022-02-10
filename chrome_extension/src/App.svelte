@@ -30,7 +30,6 @@
 
   // injects logic into inspected webpage's DOM
   function updateScript() {
-    console.log(mainToBgPort);
     mainToBgPort.postMessage({
       body: 'runContentScript',
     });
