@@ -42,6 +42,7 @@ describe('rendering of main App component', () => {
 
 describe('on clicking connect button', () => {
   let results;
+  const mainToBgPort = {};
 
   beforeEach(() => {
     results = render(App);
@@ -60,32 +61,61 @@ describe('on clicking connect button', () => {
   });
 
   it('adds events listeners to mainToBgPort', () => {
+    // checking to see if mainToBgPort has haslistener's function definition(ND)
     expect(mainToBgPort.onMessage.hasListeners()).toBe(true);
   });
 });
 
 describe('on clicking a state button', () => {
+  /*
+    need to mock Svelte app state data from background page... message should be this format:
+    {
+      body: {
+        componentStates: [
+          [
+            [
+              {component, could be {} for testing purposes},
+              {stateValues ex {counter: 0} },
+              'componentName',
+            ],
+            [
+              {component2, could be {} for testing purposes},
+              {stateValues ex {counter: 0} },
+              'component2Name'
+            ]
+          ],
+          [ [different state of component1], [different sate of comp 2] ],
+          [ [different state of component1], [different sate of comp 2] ],
+        ],
+        cacheLength: 3;
+      }
+    }
+  */
   let results;
   let mainToBgPort = {};
-  mainToBgPort.postMessage = () => {};
+
   chrome.runtime.connect.mockImplementation(() => ({
     onMessage: {
       addListener: () => {},
     },
-    postMessage: () => {
+    postMessage: jest.fn(() => ({
       body: {
-        componentStates: [],
-        cacheLength: 0
-      }
-    }
+        componentStates: [{}, { state: 0 }, 'componentName'],
+        cacheLength: 0,
+      },
+    })),
   }));
+
+  // mainToBgPort.postMessage({ body: 'updateCtx', ctxIndex: i });
 
   beforeEach(async () => {
     results = render(App);
     await fireEvent.click(screen.getByText('Connect'));
-    // setTimeout(await fireEvent.click(screen.getByText('State')), 2000);
-    // mainToBgPort.postMessage.mockImplementation(() => {});
-    // activeIndex = 0;
+    // we need to send fake data to make state buttons appear (ND)
+    setTimeout(await fireEvent.click(screen.getByText('State')), 2000);
+    mainToBgPort.postMessage.mockImplementation(() => {});
+    activeIndex = 0;
+    mainToBgPort = chrome.runtime.connect();
   });
 
   it('receive the correct data types from bg', () => {
@@ -98,20 +128,5 @@ describe('on clicking a state button', () => {
 
   it('changes activeIndex value', () => {
     expect(results.activeIndex).not.toBe(1);
-    console.log('results',results)
-    console.log(results.activeIndex)
   });
 });
-
-// describe("on receiving a message with ctx from background.js", () => {
-
-//   it('')
-
-// })
-
-// describe("on receiving a message without ctx from background.js", () => {
-
-//   it('should push undefined into snaphsots', () => {
-
-//   })
-// })
